@@ -227,6 +227,8 @@ export interface GridColDef {
    * @default false
    */
   disableExport?: boolean;
+
+  colSpan?: number;
 }
 
 export interface GridActionsColDef extends GridColDef {

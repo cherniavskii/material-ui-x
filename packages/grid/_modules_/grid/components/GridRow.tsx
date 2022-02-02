@@ -203,12 +203,28 @@ function GridRow(props: React.HTMLAttributes<HTMLDivElement> & GridRowProps) {
         ? 0
         : -1;
 
+    let colSpan = column.colSpan;
+
+    if (typeof colSpan === 'undefined') {
+      colSpan = 1;
+    }
+
+    let width = column.computedWidth;
+
+    if (colSpan > 1) {
+      for (let j = 1; j < colSpan; j += 1) {
+        const nextColumn = renderedColumns[i + j];
+        width += nextColumn.computedWidth;
+        i += 1;
+      }
+    }
+
     cells.push(
       <rootProps.components.Cell
         key={column.field}
         value={cellParams.value}
         field={column.field}
-        width={column.computedWidth}
+        width={width}
         rowId={rowId}
         height={rowHeight}
         showRightBorder={showRightBorder}
