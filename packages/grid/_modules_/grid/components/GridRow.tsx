@@ -215,8 +215,8 @@ function GridRow(props: React.HTMLAttributes<HTMLDivElement> & GridRowProps) {
       for (let j = 1; j < colSpan; j += 1) {
         const nextColumn = renderedColumns[i + j];
         width += nextColumn.computedWidth;
-        i += 1;
       }
+      i += colSpan - 1;
     }
 
     cells.push(
