@@ -15,6 +15,7 @@ import { GridStateColDef } from '../models/colDef/gridColDef';
 import { GridCellIdentifier } from '../hooks/features/focus/gridFocusState';
 import { gridColumnsMetaSelector } from '../hooks/features/columns/gridColumnsSelector';
 import { useGridSelector } from '../hooks/utils/useGridSelector';
+import { useGridCellsMeta } from '../hooks/features/cells/useGridCellsMeta';
 
 export interface GridRowProps {
   rowId: GridRowId;
@@ -93,6 +94,8 @@ function GridRow(props: React.HTMLAttributes<HTMLDivElement> & GridRowProps) {
     hasScrollX: false,
     hasScrollY: false,
   };
+
+  const { setCellMeta } = useGridCellsMeta(apiRef);
 
   const ownerState = {
     selected,
@@ -213,11 +216,26 @@ function GridRow(props: React.HTMLAttributes<HTMLDivElement> & GridRowProps) {
 
     if (colSpan > 1) {
       for (let j = 1; j < colSpan; j += 1) {
-        const nextColumn = renderedColumns[i + j];
-        width += nextColumn.computedWidth;
+        const nextColumnIndex = i + j;
+        if (renderedColumns[nextColumnIndex]) {
+          width += renderedColumns[nextColumnIndex].computedWidth;
+          setCellMeta(index, indexRelativeToAllColumns + j, {
+            spanned: true,
+            nextCellIndex: indexRelativeToAllColumns + colSpan,
+            prevCellIndex: indexRelativeToAllColumns,
+          });
+        }
       }
       i += colSpan - 1;
     }
+
+    // console.log('rowIndex', index, 'columnIndex', indexRelativeToAllColumns);
+
+    setCellMeta(index, indexRelativeToAllColumns, {
+      spanned: false,
+      nextCellIndex: indexRelativeToAllColumns + 1,
+      prevCellIndex: indexRelativeToAllColumns - 1,
+    });
 
     cells.push(
       <rootProps.components.Cell

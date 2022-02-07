@@ -29,6 +29,7 @@ import type {
 } from '../hooks/features/rowGrouping';
 import { GridColumnPinningState } from '../hooks/features/columnPinning/gridColumnPinningState';
 import { GridRowsMetaState } from '../hooks/features/rows/gridRowsMetaState';
+import { GridCellsMetaState } from '../hooks/features/cells/gridCellsMetaState';
 
 /**
  * TODO: Distinguish pro and community states
@@ -37,6 +38,7 @@ export interface GridState {
   rows: GridRowsState;
   rowsMeta: GridRowsMetaState;
   editRows: GridEditRowsModel;
+  cellsMeta: GridCellsMetaState;
   pagination: GridPaginationState;
   columns: GridColumnsState;
   columnReorder: GridColumnReorderState;

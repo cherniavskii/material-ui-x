@@ -9,6 +9,7 @@ import { useGridApiEventHandler } from '../../utils/useGridApiEventHandler';
 import { DataGridProcessedProps } from '../../../models/props/DataGridProps';
 import { gridVisibleSortedRowEntriesSelector } from '../filter/gridFilterSelector';
 import { useCurrentPageRows } from '../../utils/useCurrentPageRows';
+import { useGridCellsMeta } from '../cells/useGridCellsMeta';
 
 /**
  * @requires useGridPage (state)
@@ -30,11 +31,16 @@ export const useGridKeyboardNavigation = (
   const visibleSortedRows = useGridSelector(apiRef, gridVisibleSortedRowEntriesSelector);
   const currentPage = useCurrentPageRows(apiRef, props);
 
+  const { getCellMeta } = useGridCellsMeta(apiRef);
+
   const goToCell = React.useCallback(
     (colIndex: number, rowIndex: number) => {
       logger.debug(`Navigating to cell row ${rowIndex}, col ${colIndex}`);
       apiRef.current.scrollToIndexes({ colIndex, rowIndex });
-      const field = apiRef.current.getVisibleColumns()[colIndex].field;
+      // here we need to know that the cell has colspan and we need to skip few columns
+      const visibleColumns = apiRef.current.getVisibleColumns();
+
+      const field = visibleColumns[colIndex].field;
       const node = visibleSortedRows[rowIndex];
       apiRef.current.setCellFocus(node.id, field);
     },
@@ -76,7 +82,13 @@ export const useGridKeyboardNavigation = (
         case 'Enter': {
           // "Enter" is only triggered by the row / cell editing feature
           if (rowIndexBefore < lastRowIndexInPage) {
-            goToCell(colIndexBefore, rowIndexBefore + 1);
+            const nextRowIndex = rowIndexBefore + 1;
+            const nextColIndex = colIndexBefore;
+            // const meta = getCellMeta(nextRowIndex, colIndexBefore);
+            // if (meta.spanned) {
+            //   nextColIndex = meta.prevCellIndex;
+            // }
+            goToCell(nextColIndex, nextRowIndex);
           }
           break;
         }
@@ -92,14 +104,24 @@ export const useGridKeyboardNavigation = (
 
         case 'ArrowRight': {
           if (colIndexBefore < lastColIndex) {
-            goToCell(colIndexBefore + 1, rowIndexBefore);
+            let nextColIndex = colIndexBefore + 1;
+            const meta = getCellMeta(rowIndexBefore, nextColIndex);
+            if (meta && meta.spanned) {
+              nextColIndex = meta.nextCellIndex;
+            }
+            goToCell(nextColIndex, rowIndexBefore);
           }
           break;
         }
 
         case 'ArrowLeft': {
           if (colIndexBefore > firstColIndex) {
-            goToCell(colIndexBefore - 1, rowIndexBefore);
+            let nextColIndex = colIndexBefore - 1;
+            const meta = getCellMeta(rowIndexBefore, nextColIndex);
+            if (meta && meta.spanned) {
+              nextColIndex = meta.prevCellIndex;
+            }
+            goToCell(nextColIndex, rowIndexBefore);
           }
           break;
         }
@@ -163,7 +185,7 @@ export const useGridKeyboardNavigation = (
         event.preventDefault();
       }
     },
-    [apiRef, visibleSortedRows, colCount, currentPage, goToCell, goToHeader],
+    [apiRef, currentPage.range, visibleSortedRows, colCount, goToCell, goToHeader, getCellMeta],
   );
 
   const handleColumnHeaderKeyDown = React.useCallback<
@@ -189,7 +211,12 @@ export const useGridKeyboardNavigation = (
       switch (event.key) {
         case 'ArrowDown': {
           if (firstRowIndexInPage !== null) {
-            goToCell(colIndexBefore, firstRowIndexInPage);
+            let nextColIndex = colIndexBefore;
+            const meta = getCellMeta(firstRowIndexInPage, colIndexBefore);
+            if (meta && meta.spanned) {
+              nextColIndex = meta.prevCellIndex;
+            }
+            goToCell(nextColIndex, firstRowIndexInPage);
           }
           break;
         }
