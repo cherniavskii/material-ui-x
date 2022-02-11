@@ -223,7 +223,7 @@ describe('<DataGrid /> - Column Spanning', () => {
       });
     });
 
-    it.only('should move to the cell on the right when pressing "Tab" after editing', async () => {
+    it('should move to the cell on the right when pressing "Tab" after editing', async () => {
       const editableColumns = columns.map((column) => ({ ...column, editable: true }));
       render(
         <div style={{ width: 500, height: 300 }}>
@@ -243,7 +243,7 @@ describe('<DataGrid /> - Column Spanning', () => {
       });
     });
 
-    it.only('should move to the cell on the left when pressing "Shift+Tab" after editing', async () => {
+    it('should move to the cell on the left when pressing "Shift+Tab" after editing', async () => {
       const editableColumns = columns.map((column) => ({ ...column, editable: true }));
       render(
         <div style={{ width: 500, height: 300 }}>
