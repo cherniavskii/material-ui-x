@@ -134,11 +134,30 @@ export const useGridKeyboardNavigation = (
 
         case 'Tab': {
           // "Tab" is only triggered by the row / cell editing feature
-          if (event.shiftKey && colIndexBefore > firstColIndex) {
-            goToCell(colIndexBefore - 1, rowIndexBefore);
-          } else if (!event.shiftKey && colIndexBefore < lastColIndex) {
-            goToCell(colIndexBefore + 1, rowIndexBefore);
+          const nextRowIndex = rowIndexBefore;
+          let nextColIndex;
+          if (event.shiftKey) {
+            if (colIndexBefore <= firstColIndex) {
+              break;
+            }
+            nextColIndex = colIndexBefore - 1;
+            const nextCellMeta = getCellMeta(nextRowIndex, nextColIndex);
+            if (nextCellMeta && nextCellMeta.spanned) {
+              nextColIndex = nextCellMeta.prevCellIndex;
+            }
+          } else {
+            if (colIndexBefore >= lastColIndex) {
+              break;
+            }
+            nextColIndex = colIndexBefore + 1;
+            const nextCellMeta = getCellMeta(nextRowIndex, nextColIndex);
+            if (nextCellMeta && nextCellMeta.spanned) {
+              nextColIndex = nextCellMeta.nextCellIndex;
+            }
           }
+
+          goToCell(nextColIndex, nextRowIndex);
+
           break;
         }
 
