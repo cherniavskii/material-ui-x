@@ -450,24 +450,52 @@ export function PinnedColumnWithCheckboxSelectionSnap() {
 }
 
 export function ColumnSpanning() {
-  const rows = [
-    { id: 1, value1: 1, value2: 11, value3: 111, value4: 1111, value5: 11111, value6: 1111111 },
-    { id: 2, value1: 2, value2: 22, value3: 222, value4: 2222, value5: 22222, value6: 2222222 },
-    { id: 3, value1: 3, value2: 33, value3: 333, value4: 3333, value5: 33333, value6: 3333333 },
-  ];
   const columns = [
-    { field: 'value1', colSpan: 3 },
-    { field: 'value2' },
-    { field: 'value3' },
-    { field: 'value4' },
-    { field: 'value5' },
-    { field: 'value6' },
+    {
+      field: 'brand',
+      colSpan: ({ row }) => (row.brand === 'Nike' ? 2 : 1),
+      editable: true,
+    },
+    {
+      field: 'category',
+      colSpan: ({ row }) => (row.brand === 'Adidas' ? 2 : 1),
+      editable: true,
+    },
+    {
+      field: 'price',
+      colSpan: ({ row }) => (row.brand === 'Puma' ? 2 : 1),
+      editable: true,
+    },
+    { field: 'rating', editable: true },
+  ];
+
+  const rows = [
+    {
+      id: 0,
+      brand: 'Nike',
+      category: 'Shoes',
+      price: '$120',
+      rating: '4.5',
+    },
+    {
+      id: 1,
+      brand: 'Adidas',
+      category: 'Shoes',
+      price: '$100',
+      rating: '4.5',
+    },
+    {
+      id: 2,
+      brand: 'Puma',
+      category: 'Shoes',
+      price: '$90',
+      rating: '4.5',
+    },
   ];
 
   return (
     <div style={{ width: '100%', height: 400 }}>
       <DataGridPro
-        // autoHeight
         showCellRightBorder
         showColumnRightBorder
         disableExtendRowFullWidth
