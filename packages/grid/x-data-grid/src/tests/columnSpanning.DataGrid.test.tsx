@@ -173,5 +173,33 @@ describe('<DataGrid /> - Column Spanning', () => {
       fireEvent.keyDown(document.activeElement!, { key: 'ArrowDown' });
       expect(getActiveCell()).to.equal('2-2');
     });
+
+    it('should move down by the amount of rows visible on screen when pressing "PageDown"', () => {
+      render(
+        <div style={{ width: 500, height: 300 }}>
+          <DataGrid {...baselineProps} columns={columns} />
+        </div>,
+      );
+
+      fireClickEvent(getCell(0, 3));
+      expect(getActiveCell()).to.equal('0-3');
+
+      fireEvent.keyDown(document.activeElement!, { key: 'PageDown' });
+      expect(getActiveCell()).to.equal('2-2');
+    });
+
+    it('should move up by the amount of rows visible on screen when pressing "PageUp"', () => {
+      render(
+        <div style={{ width: 500, height: 300 }}>
+          <DataGrid {...baselineProps} columns={columns} />
+        </div>,
+      );
+
+      fireClickEvent(getCell(2, 1));
+      expect(getActiveCell()).to.equal('2-1');
+
+      fireEvent.keyDown(document.activeElement!, { key: 'PageUp' });
+      expect(getActiveCell()).to.equal('0-0');
+    });
   });
 });
