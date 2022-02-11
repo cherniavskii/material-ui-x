@@ -215,6 +215,10 @@ function GridRow(props: React.HTMLAttributes<HTMLDivElement> & GridRowProps) {
 
     let width = column.computedWidth;
 
+    // Attributes used by `useGridColumnResize` to update column width during resizing.
+    // This makes resizing smooth even for cells with colspan > 1.
+    const dataColSpanAttributes: Record<string, string> = {};
+
     if (colSpan > 1) {
       for (let j = 1; j < colSpan; j += 1) {
         const nextColumnIndex = i + j;
@@ -225,12 +229,13 @@ function GridRow(props: React.HTMLAttributes<HTMLDivElement> & GridRowProps) {
             nextCellIndex: Math.min(indexRelativeToAllColumns + colSpan, visibleColumns.length - 1),
             prevCellIndex: indexRelativeToAllColumns,
           });
+          dataColSpanAttributes[
+            `data-colspan-allocates-field-${renderedColumns[nextColumnIndex].field}`
+          ] = '1';
         }
       }
       i += colSpan - 1;
     }
-
-    // console.log('rowIndex', index, 'columnIndex', indexRelativeToAllColumns);
 
     setCellMeta(index, indexRelativeToAllColumns, {
       spanned: false,
@@ -255,7 +260,9 @@ function GridRow(props: React.HTMLAttributes<HTMLDivElement> & GridRowProps) {
         hasFocus={hasFocus}
         tabIndex={tabIndex}
         className={clsx(classNames)}
+        colSpan={colSpan}
         {...rootProps.componentsProps?.cell}
+        {...dataColSpanAttributes}
       >
         {content}
       </rootProps.components.Cell>,

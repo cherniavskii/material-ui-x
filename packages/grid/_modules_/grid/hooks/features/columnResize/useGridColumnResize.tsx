@@ -130,6 +130,9 @@ export const useGridColumnResize = (
   const updateWidth = (newWidth: number) => {
     logger.debug(`Updating width to ${newWidth} for col ${colDefRef.current!.field}`);
 
+    const prevWidth = colElementRef.current!.offsetWidth;
+    const widthDiff = newWidth - prevWidth;
+
     colDefRef.current!.computedWidth = newWidth;
     colDefRef.current!.width = newWidth;
     colDefRef.current!.flex = undefined;
@@ -140,9 +143,18 @@ export const useGridColumnResize = (
 
     colCellElementsRef.current!.forEach((element) => {
       const div = element as HTMLDivElement;
-      div.style.width = `${newWidth}px`;
-      div.style.minWidth = `${newWidth}px`;
-      div.style.maxWidth = `${newWidth}px`;
+      if (div.getAttribute('colspan') === '1') {
+        div.style.width = `${newWidth}px`;
+        div.style.minWidth = `${newWidth}px`;
+        div.style.maxWidth = `${newWidth}px`;
+      } else {
+        // Cell with colspan > 1 cannot be just updated width new width.
+        // Instead, we add width diff to the current width.
+        const width = div.offsetWidth;
+        div.style.width = `${width + widthDiff}px`;
+        div.style.minWidth = `${width + widthDiff}px`;
+        div.style.maxWidth = `${width + widthDiff}px`;
+      }
     });
   };
 
