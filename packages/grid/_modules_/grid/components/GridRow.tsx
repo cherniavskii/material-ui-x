@@ -221,7 +221,7 @@ function GridRow(props: React.HTMLAttributes<HTMLDivElement> & GridRowProps) {
           width += renderedColumns[nextColumnIndex].computedWidth;
           setCellMeta(index, indexRelativeToAllColumns + j, {
             spanned: true,
-            nextCellIndex: indexRelativeToAllColumns + colSpan,
+            nextCellIndex: Math.min(indexRelativeToAllColumns + colSpan, visibleColumns.length - 1),
             prevCellIndex: indexRelativeToAllColumns,
           });
         }
