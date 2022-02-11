@@ -206,7 +206,8 @@ function GridRow(props: React.HTMLAttributes<HTMLDivElement> & GridRowProps) {
         ? 0
         : -1;
 
-    let colSpan = column.colSpan;
+    let colSpan =
+      typeof column.colSpan === 'function' ? column.colSpan(cellParams) : column.colSpan;
 
     if (typeof colSpan === 'undefined') {
       colSpan = 1;

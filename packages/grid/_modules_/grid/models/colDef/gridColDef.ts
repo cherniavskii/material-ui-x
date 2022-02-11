@@ -228,7 +228,7 @@ export interface GridColDef {
    */
   disableExport?: boolean;
 
-  colSpan?: number;
+  colSpan?: number | ((GridCellParams) => number);
 }
 
 export interface GridActionsColDef extends GridColDef {
