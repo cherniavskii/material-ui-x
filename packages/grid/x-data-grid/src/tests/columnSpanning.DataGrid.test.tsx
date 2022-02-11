@@ -1,8 +1,13 @@
 import * as React from 'react';
-import { createRenderer } from '@mui/monorepo/test/utils';
+import { createRenderer, fireEvent } from '@mui/monorepo/test/utils';
 import { expect } from 'chai';
 import { DataGrid } from '@mui/x-data-grid';
-import { getCell } from 'test/utils/helperFn';
+import { getCell, getActiveCell } from 'test/utils/helperFn';
+
+function fireClickEvent(cell: HTMLElement) {
+  fireEvent.mouseUp(cell);
+  fireEvent.click(cell);
+}
 
 describe('<DataGrid /> - Column Spanning', () => {
   const { render } = createRenderer({ clock: 'fake' });
@@ -93,5 +98,80 @@ describe('<DataGrid /> - Column Spanning', () => {
     expect(() => getCell(2, 1)).to.not.throw();
     expect(() => getCell(2, 2)).to.not.throw();
     expect(() => getCell(2, 3)).to.throw(/not found/);
+  });
+
+  /* eslint-disable material-ui/disallow-active-element-as-key-event-target */
+  describe('should handle arrow key navigation', () => {
+    const columns = [
+      {
+        field: 'brand',
+        colSpan: ({ row }) => (row.brand === 'Nike' ? 2 : 1),
+      },
+      {
+        field: 'category',
+        colSpan: ({ row }) => (row.brand === 'Adidas' ? 2 : 1),
+      },
+      {
+        field: 'price',
+        colSpan: ({ row }) => (row.brand === 'Puma' ? 2 : 1),
+      },
+      { field: 'rating' },
+    ];
+
+    it('should move to the cell right when pressing "ArrowRight"', () => {
+      render(
+        <div style={{ width: 500, height: 300 }}>
+          <DataGrid {...baselineProps} columns={columns} />
+        </div>,
+      );
+
+      fireClickEvent(getCell(0, 0));
+      expect(getActiveCell()).to.equal('0-0');
+
+      fireEvent.keyDown(document.activeElement!, { key: 'ArrowRight' });
+      expect(getActiveCell()).to.equal('0-2');
+    });
+
+    it('should move to the cell left when pressing "ArrowLeft"', () => {
+      render(
+        <div style={{ width: 500, height: 300 }}>
+          <DataGrid {...baselineProps} columns={columns} />
+        </div>,
+      );
+
+      fireClickEvent(getCell(0, 2));
+      expect(getActiveCell()).to.equal('0-2');
+
+      fireEvent.keyDown(document.activeElement!, { key: 'ArrowLeft' });
+      expect(getActiveCell()).to.equal('0-0');
+    });
+
+    it('should move to the cell above when pressing "ArrowUp"', () => {
+      render(
+        <div style={{ width: 500, height: 300 }}>
+          <DataGrid {...baselineProps} columns={columns} />
+        </div>,
+      );
+
+      fireClickEvent(getCell(1, 1));
+      expect(getActiveCell()).to.equal('1-1');
+
+      fireEvent.keyDown(document.activeElement!, { key: 'ArrowUp' });
+      expect(getActiveCell()).to.equal('0-0');
+    });
+
+    it('should move to the cell below when pressing "ArrowDown"', () => {
+      render(
+        <div style={{ width: 500, height: 300 }}>
+          <DataGrid {...baselineProps} columns={columns} />
+        </div>,
+      );
+
+      fireClickEvent(getCell(1, 3));
+      expect(getActiveCell()).to.equal('1-3');
+
+      fireEvent.keyDown(document.activeElement!, { key: 'ArrowDown' });
+      expect(getActiveCell()).to.equal('2-2');
+    });
   });
 });
