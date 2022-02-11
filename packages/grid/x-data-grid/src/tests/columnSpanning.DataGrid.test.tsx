@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { createRenderer, fireEvent } from '@mui/monorepo/test/utils';
+import { createRenderer, fireEvent, waitFor } from '@mui/monorepo/test/utils';
 import { expect } from 'chai';
 import { DataGrid } from '@mui/x-data-grid';
 import { getCell, getActiveCell } from 'test/utils/helperFn';
@@ -101,7 +101,7 @@ describe('<DataGrid /> - Column Spanning', () => {
   });
 
   /* eslint-disable material-ui/disallow-active-element-as-key-event-target */
-  describe('should handle arrow key navigation', () => {
+  describe('should handle key navigation', () => {
     const columns = [
       {
         field: 'brand',
@@ -200,6 +200,27 @@ describe('<DataGrid /> - Column Spanning', () => {
 
       fireEvent.keyDown(document.activeElement!, { key: 'PageUp' });
       expect(getActiveCell()).to.equal('0-0');
+    });
+
+    it('should move to the cell below when pressing "Enter" after editing', async () => {
+      const editableColumns = columns.map((column) => ({ ...column, editable: true }));
+      render(
+        <div style={{ width: 500, height: 300 }}>
+          <DataGrid {...baselineProps} columns={editableColumns} />
+        </div>,
+      );
+
+      fireClickEvent(getCell(1, 3));
+      expect(getActiveCell()).to.equal('1-3');
+
+      // start editing
+      fireEvent.keyDown(document.activeElement!, { key: 'Enter' });
+
+      // commit
+      fireEvent.keyDown(document.activeElement!, { key: 'Enter' });
+      await waitFor(() => {
+        expect(getActiveCell()).to.equal('2-2');
+      });
     });
   });
 });
