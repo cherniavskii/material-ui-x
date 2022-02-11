@@ -222,5 +222,45 @@ describe('<DataGrid /> - Column Spanning', () => {
         expect(getActiveCell()).to.equal('2-2');
       });
     });
+
+    it.only('should move to the cell on the right when pressing "Tab" after editing', async () => {
+      const editableColumns = columns.map((column) => ({ ...column, editable: true }));
+      render(
+        <div style={{ width: 500, height: 300 }}>
+          <DataGrid {...baselineProps} columns={editableColumns} />
+        </div>,
+      );
+
+      fireClickEvent(getCell(1, 1));
+      expect(getActiveCell()).to.equal('1-1');
+
+      // start editing
+      fireEvent.keyDown(document.activeElement!, { key: 'Enter' });
+
+      fireEvent.keyDown(document.activeElement!, { key: 'Tab' });
+      await waitFor(() => {
+        expect(getActiveCell()).to.equal('1-3');
+      });
+    });
+
+    it.only('should move to the cell on the left when pressing "Shift+Tab" after editing', async () => {
+      const editableColumns = columns.map((column) => ({ ...column, editable: true }));
+      render(
+        <div style={{ width: 500, height: 300 }}>
+          <DataGrid {...baselineProps} columns={editableColumns} />
+        </div>,
+      );
+
+      fireClickEvent(getCell(0, 2));
+      expect(getActiveCell()).to.equal('0-2');
+
+      // start editing
+      fireEvent.keyDown(document.activeElement!, { key: 'Enter' });
+
+      fireEvent.keyDown(document.activeElement!, { key: 'Tab', shiftKey: true });
+      await waitFor(() => {
+        expect(getActiveCell()).to.equal('0-0');
+      });
+    });
   });
 });
