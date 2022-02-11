@@ -83,11 +83,11 @@ export const useGridKeyboardNavigation = (
           // "Enter" is only triggered by the row / cell editing feature
           if (rowIndexBefore < lastRowIndexInPage) {
             const nextRowIndex = rowIndexBefore + 1;
-            const nextColIndex = colIndexBefore;
-            // const meta = getCellMeta(nextRowIndex, colIndexBefore);
-            // if (meta.spanned) {
-            //   nextColIndex = meta.prevCellIndex;
-            // }
+            let nextColIndex = colIndexBefore;
+            const nextCellMeta = getCellMeta(nextRowIndex, colIndexBefore);
+            if (nextCellMeta && nextCellMeta.spanned) {
+              nextColIndex = nextCellMeta.prevCellIndex;
+            }
             goToCell(nextColIndex, nextRowIndex);
           }
           break;
@@ -95,7 +95,13 @@ export const useGridKeyboardNavigation = (
 
         case 'ArrowUp': {
           if (rowIndexBefore > firstRowIndexInPage) {
-            goToCell(colIndexBefore, rowIndexBefore - 1);
+            const nextRowIndex = rowIndexBefore - 1;
+            let nextColIndex = colIndexBefore;
+            const nextCellMeta = getCellMeta(nextRowIndex, colIndexBefore);
+            if (nextCellMeta && nextCellMeta.spanned) {
+              nextColIndex = nextCellMeta.prevCellIndex;
+            }
+            goToCell(nextColIndex, nextRowIndex);
           } else {
             goToHeader(colIndexBefore, event);
           }
@@ -105,9 +111,10 @@ export const useGridKeyboardNavigation = (
         case 'ArrowRight': {
           if (colIndexBefore < lastColIndex) {
             let nextColIndex = colIndexBefore + 1;
-            const meta = getCellMeta(rowIndexBefore, nextColIndex);
-            if (meta && meta.spanned) {
-              nextColIndex = meta.nextCellIndex;
+            const nextCellMeta = getCellMeta(rowIndexBefore, nextColIndex);
+            // console.log('meta', meta);
+            if (nextCellMeta && nextCellMeta.spanned) {
+              nextColIndex = nextCellMeta.nextCellIndex;
             }
             goToCell(nextColIndex, rowIndexBefore);
           }
@@ -117,9 +124,9 @@ export const useGridKeyboardNavigation = (
         case 'ArrowLeft': {
           if (colIndexBefore > firstColIndex) {
             let nextColIndex = colIndexBefore - 1;
-            const meta = getCellMeta(rowIndexBefore, nextColIndex);
-            if (meta && meta.spanned) {
-              nextColIndex = meta.prevCellIndex;
+            const nextCellMeta = getCellMeta(rowIndexBefore, nextColIndex);
+            if (nextCellMeta && nextCellMeta.spanned) {
+              nextColIndex = nextCellMeta.prevCellIndex;
             }
             goToCell(nextColIndex, rowIndexBefore);
           }
@@ -212,9 +219,9 @@ export const useGridKeyboardNavigation = (
         case 'ArrowDown': {
           if (firstRowIndexInPage !== null) {
             let nextColIndex = colIndexBefore;
-            const meta = getCellMeta(firstRowIndexInPage, colIndexBefore);
-            if (meta && meta.spanned) {
-              nextColIndex = meta.prevCellIndex;
+            const nextCellMeta = getCellMeta(firstRowIndexInPage, colIndexBefore);
+            if (nextCellMeta && nextCellMeta.spanned) {
+              nextColIndex = nextCellMeta.prevCellIndex;
             }
             goToCell(nextColIndex, firstRowIndexInPage);
           }
@@ -276,7 +283,7 @@ export const useGridKeyboardNavigation = (
         event.preventDefault();
       }
     },
-    [apiRef, colCount, currentPage, goToCell, goToHeader],
+    [apiRef, colCount, currentPage, goToCell, goToHeader, getCellMeta],
   );
 
   useGridApiEventHandler(apiRef, GridEvents.cellNavigationKeyDown, handleCellNavigationKeyDown);

@@ -39,7 +39,7 @@ export const useGridCellsMeta = (apiRef: GridApiRef) => {
   );
 
   const getCellMeta = React.useCallback(
-    (rowIndex: GridRowIndex, columnIndex: GridColumnIndex) => {
+    (rowIndex: GridRowIndex, columnIndex: GridColumnIndex): GridCellMeta | undefined => {
       const cellsMeta = gridCellsMetaSelector(apiRef.current.state);
       const { sizes } = cellsMeta;
 
