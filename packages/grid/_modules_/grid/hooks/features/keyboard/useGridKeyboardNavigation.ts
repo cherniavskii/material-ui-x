@@ -112,7 +112,6 @@ export const useGridKeyboardNavigation = (
           if (colIndexBefore < lastColIndex) {
             let nextColIndex = colIndexBefore + 1;
             const nextCellMeta = getCellMeta(rowIndexBefore, nextColIndex);
-            // console.log('meta', meta);
             if (nextCellMeta && nextCellMeta.spanned) {
               nextColIndex = nextCellMeta.nextCellIndex;
             }
@@ -146,10 +145,13 @@ export const useGridKeyboardNavigation = (
         case 'PageDown':
         case ' ': {
           if (rowIndexBefore < lastRowIndexInPage) {
-            goToCell(
-              colIndexBefore,
-              Math.min(rowIndexBefore + viewportPageSize, lastRowIndexInPage),
-            );
+            const nextRowIndex = Math.min(rowIndexBefore + viewportPageSize, lastRowIndexInPage);
+            let nextColIndex = colIndexBefore;
+            const nextCellMeta = getCellMeta(nextRowIndex, nextColIndex);
+            if (nextCellMeta && nextCellMeta.spanned) {
+              nextColIndex = nextCellMeta.prevCellIndex;
+            }
+            goToCell(nextColIndex, nextRowIndex);
           }
           break;
         }
@@ -158,7 +160,12 @@ export const useGridKeyboardNavigation = (
           // Go to the first row before going to header
           const nextRowIndex = Math.max(rowIndexBefore - viewportPageSize, firstRowIndexInPage);
           if (nextRowIndex !== rowIndexBefore && nextRowIndex >= firstRowIndexInPage) {
-            goToCell(colIndexBefore, nextRowIndex);
+            let nextColIndex = colIndexBefore;
+            const nextCellMeta = getCellMeta(nextRowIndex, nextColIndex);
+            if (nextCellMeta && nextCellMeta.spanned) {
+              nextColIndex = nextCellMeta.prevCellIndex;
+            }
+            goToCell(nextColIndex, nextRowIndex);
           } else {
             goToHeader(colIndexBefore, event);
           }
