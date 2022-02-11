@@ -431,6 +431,24 @@ export function FlexLayoutGridSnap() {
   );
 }
 
+export function PinnedColumnWithCheckboxSelectionSnap() {
+  const { data } = useDemoData({
+    dataSet: 'Commodity',
+    rowLength: 15,
+    maxColumns: 6,
+  });
+
+  return (
+    <div style={{ height: 400, width: '100%' }}>
+      <DataGridPro
+        {...data}
+        initialState={{ pinnedColumns: { left: ['desk'] } }}
+        checkboxSelection
+      />
+    </div>
+  );
+}
+
 export function ColumnSpanning() {
   const rows = [
     { id: 1, value1: 1, value2: 11, value3: 111, value4: 1111, value5: 11111, value6: 1111111 },
