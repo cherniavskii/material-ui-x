@@ -263,4 +263,91 @@ describe('<DataGrid /> - Column Spanning', () => {
       });
     });
   });
+
+  it('should work with filtering', () => {
+    render(
+      <div style={{ width: 500, height: 300 }}>
+        <DataGrid
+          {...baselineProps}
+          columns={[
+            {
+              field: 'brand',
+              colSpan: ({ row }) => (row.brand === 'Nike' ? 2 : 1),
+            },
+            {
+              field: 'category',
+              colSpan: ({ row }) => (row.brand === 'Adidas' ? 2 : 1),
+            },
+            {
+              field: 'price',
+              colSpan: ({ row }) => (row.brand === 'Puma' ? 2 : 1),
+            },
+            { field: 'rating' },
+          ]}
+          rows={[
+            {
+              id: 0,
+              brand: 'Nike',
+              category: 'Shoes',
+              price: '$120',
+              rating: '4.5',
+            },
+            {
+              id: 1,
+              brand: 'Adidas',
+              category: 'Shoes',
+              price: '$100',
+              rating: '4.5',
+            },
+            {
+              id: 2,
+              brand: 'Puma',
+              category: 'Shoes',
+              price: '$90',
+              rating: '4.5',
+            },
+            {
+              id: 3,
+              brand: 'Nike',
+              category: 'Shoes',
+              price: '$120',
+              rating: '4.5',
+            },
+            {
+              id: 4,
+              brand: 'Adidas',
+              category: 'Shoes',
+              price: '$100',
+              rating: '4.5',
+            },
+            {
+              id: 5,
+              brand: 'Puma',
+              category: 'Shoes',
+              price: '$90',
+              rating: '4.5',
+            },
+          ]}
+          initialState={{
+            filter: {
+              filterModel: {
+                items: [{ columnField: 'brand', operatorValue: 'equals', value: 'Nike' }],
+              },
+            },
+          }}
+        />
+      </div>,
+    );
+    // First Nike row
+    expect(() => getCell(0, 0)).to.not.throw();
+    expect(() => getCell(0, 1)).to.throw(/not found/);
+    expect(() => getCell(0, 2)).to.not.throw();
+    expect(() => getCell(0, 3)).to.not.throw();
+
+    // Second Nike row
+    expect(() => getCell(1, 0)).to.not.throw();
+    expect(() => getCell(1, 1)).to.throw(/not found/);
+    expect(() => getCell(1, 2)).to.not.throw();
+    expect(() => getCell(1, 3)).to.not.throw();
+  });
 });
