@@ -15,7 +15,6 @@ import { GridStateColDef } from '../models/colDef/gridColDef';
 import { GridCellIdentifier } from '../hooks/features/focus/gridFocusState';
 import { gridColumnsMetaSelector } from '../hooks/features/columns/gridColumnsSelector';
 import { useGridSelector } from '../hooks/utils/useGridSelector';
-import { useGridCellsMeta } from '../hooks/features/cells/useGridCellsMeta';
 
 export interface GridRowProps {
   rowId: GridRowId;
@@ -94,8 +93,6 @@ function GridRow(props: React.HTMLAttributes<HTMLDivElement> & GridRowProps) {
     hasScrollX: false,
     hasScrollY: false,
   };
-
-  const { setCellMeta } = useGridCellsMeta(apiRef);
 
   const ownerState = {
     selected,
@@ -206,42 +203,17 @@ function GridRow(props: React.HTMLAttributes<HTMLDivElement> & GridRowProps) {
         ? 0
         : -1;
 
-    let colSpan =
-      typeof column.colSpan === 'function' ? column.colSpan(cellParams) : column.colSpan;
+    const cellProps = apiRef.current.unstable_calculateCellSize({
+      columnIndex: indexRelativeToAllColumns,
+      rowIndex: index,
+      cellParams,
+    });
 
-    if (typeof colSpan === 'undefined') {
-      colSpan = 1;
-    }
-
-    let width = column.computedWidth;
-
-    // Attributes used by `useGridColumnResize` to update column width during resizing.
-    // This makes resizing smooth even for cells with colspan > 1.
-    const dataColSpanAttributes: Record<string, string> = {};
+    const { colSpan, width, ...otherCellProps } = cellProps;
 
     if (colSpan > 1) {
-      for (let j = 1; j < colSpan; j += 1) {
-        const nextColumnIndex = i + j;
-        if (renderedColumns[nextColumnIndex]) {
-          width += renderedColumns[nextColumnIndex].computedWidth;
-          setCellMeta(index, indexRelativeToAllColumns + j, {
-            spanned: true,
-            nextCellIndex: Math.min(indexRelativeToAllColumns + colSpan, visibleColumns.length - 1),
-            prevCellIndex: indexRelativeToAllColumns,
-          });
-          dataColSpanAttributes[
-            `data-colspan-allocates-field-${renderedColumns[nextColumnIndex].field}`
-          ] = '1';
-        }
-      }
       i += colSpan - 1;
     }
-
-    setCellMeta(index, indexRelativeToAllColumns, {
-      spanned: false,
-      nextCellIndex: indexRelativeToAllColumns + 1,
-      prevCellIndex: indexRelativeToAllColumns - 1,
-    });
 
     cells.push(
       <rootProps.components.Cell
@@ -261,8 +233,8 @@ function GridRow(props: React.HTMLAttributes<HTMLDivElement> & GridRowProps) {
         tabIndex={tabIndex}
         className={clsx(classNames)}
         colSpan={colSpan}
+        {...otherCellProps}
         {...rootProps.componentsProps?.cell}
-        {...dataColSpanAttributes}
       >
         {content}
       </rootProps.components.Cell>,

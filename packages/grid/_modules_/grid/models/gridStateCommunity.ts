@@ -18,7 +18,6 @@ import type {
 import type { GridRowsMetaState } from '../hooks/features/rows/gridRowsMetaState';
 import type { GridEditRowsModel } from './gridEditRowModel';
 import type { GridSelectionModel } from './gridSelectionModel';
-import { GridCellsMetaState } from '../hooks/features/cells/gridCellsMetaState';
 
 /**
  * The state of `DataGrid`.
@@ -27,7 +26,6 @@ import { GridCellsMetaState } from '../hooks/features/cells/gridCellsMetaState';
 export interface GridStateCommunity {
   rows: GridRowsState;
   rowsMeta: GridRowsMetaState;
-  cellsMeta: GridCellsMetaState;
   editRows: GridEditRowsModel;
   pagination: GridPaginationState;
   columns: GridColumnsState;

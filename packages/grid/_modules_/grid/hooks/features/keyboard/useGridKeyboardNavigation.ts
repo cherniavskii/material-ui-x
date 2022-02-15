@@ -9,7 +9,6 @@ import { useGridApiEventHandler } from '../../utils/useGridApiEventHandler';
 import { DataGridProcessedProps } from '../../../models/props/DataGridProps';
 import { gridVisibleSortedRowEntriesSelector } from '../filter/gridFilterSelector';
 import { useCurrentPageRows } from '../../utils/useCurrentPageRows';
-import { useGridCellsMeta } from '../cells/useGridCellsMeta';
 
 /**
  * @requires useGridPage (state)
@@ -30,8 +29,6 @@ export const useGridKeyboardNavigation = (
   const colCount = useGridSelector(apiRef, visibleGridColumnsLengthSelector);
   const visibleSortedRows = useGridSelector(apiRef, gridVisibleSortedRowEntriesSelector);
   const currentPage = useCurrentPageRows(apiRef, props);
-
-  const { getCellMeta } = useGridCellsMeta(apiRef);
 
   const goToCell = React.useCallback(
     (colIndex: number, rowIndex: number) => {
@@ -84,7 +81,7 @@ export const useGridKeyboardNavigation = (
           if (rowIndexBefore < lastRowIndexInPage) {
             const nextRowIndex = rowIndexBefore + 1;
             let nextColIndex = colIndexBefore;
-            const nextCellMeta = getCellMeta(nextRowIndex, colIndexBefore);
+            const nextCellMeta = apiRef.current.unstable_getCellSize(nextRowIndex, colIndexBefore);
             if (nextCellMeta && nextCellMeta.spanned) {
               nextColIndex = nextCellMeta.prevCellIndex;
             }
@@ -97,7 +94,7 @@ export const useGridKeyboardNavigation = (
           if (rowIndexBefore > firstRowIndexInPage) {
             const nextRowIndex = rowIndexBefore - 1;
             let nextColIndex = colIndexBefore;
-            const nextCellMeta = getCellMeta(nextRowIndex, colIndexBefore);
+            const nextCellMeta = apiRef.current.unstable_getCellSize(nextRowIndex, colIndexBefore);
             if (nextCellMeta && nextCellMeta.spanned) {
               nextColIndex = nextCellMeta.prevCellIndex;
             }
@@ -111,7 +108,7 @@ export const useGridKeyboardNavigation = (
         case 'ArrowRight': {
           if (colIndexBefore < lastColIndex) {
             let nextColIndex = colIndexBefore + 1;
-            const nextCellMeta = getCellMeta(rowIndexBefore, nextColIndex);
+            const nextCellMeta = apiRef.current.unstable_getCellSize(rowIndexBefore, nextColIndex);
             if (nextCellMeta && nextCellMeta.spanned) {
               nextColIndex = nextCellMeta.nextCellIndex;
             }
@@ -123,7 +120,7 @@ export const useGridKeyboardNavigation = (
         case 'ArrowLeft': {
           if (colIndexBefore > firstColIndex) {
             let nextColIndex = colIndexBefore - 1;
-            const nextCellMeta = getCellMeta(rowIndexBefore, nextColIndex);
+            const nextCellMeta = apiRef.current.unstable_getCellSize(rowIndexBefore, nextColIndex);
             if (nextCellMeta && nextCellMeta.spanned) {
               nextColIndex = nextCellMeta.prevCellIndex;
             }
@@ -141,7 +138,7 @@ export const useGridKeyboardNavigation = (
               break;
             }
             nextColIndex = colIndexBefore - 1;
-            const nextCellMeta = getCellMeta(nextRowIndex, nextColIndex);
+            const nextCellMeta = apiRef.current.unstable_getCellSize(nextRowIndex, nextColIndex);
             if (nextCellMeta && nextCellMeta.spanned) {
               nextColIndex = nextCellMeta.prevCellIndex;
             }
@@ -150,7 +147,7 @@ export const useGridKeyboardNavigation = (
               break;
             }
             nextColIndex = colIndexBefore + 1;
-            const nextCellMeta = getCellMeta(nextRowIndex, nextColIndex);
+            const nextCellMeta = apiRef.current.unstable_getCellSize(nextRowIndex, nextColIndex);
             if (nextCellMeta && nextCellMeta.spanned) {
               nextColIndex = nextCellMeta.nextCellIndex;
             }
@@ -166,7 +163,7 @@ export const useGridKeyboardNavigation = (
           if (rowIndexBefore < lastRowIndexInPage) {
             const nextRowIndex = Math.min(rowIndexBefore + viewportPageSize, lastRowIndexInPage);
             let nextColIndex = colIndexBefore;
-            const nextCellMeta = getCellMeta(nextRowIndex, nextColIndex);
+            const nextCellMeta = apiRef.current.unstable_getCellSize(nextRowIndex, nextColIndex);
             if (nextCellMeta && nextCellMeta.spanned) {
               nextColIndex = nextCellMeta.prevCellIndex;
             }
@@ -180,7 +177,7 @@ export const useGridKeyboardNavigation = (
           const nextRowIndex = Math.max(rowIndexBefore - viewportPageSize, firstRowIndexInPage);
           if (nextRowIndex !== rowIndexBefore && nextRowIndex >= firstRowIndexInPage) {
             let nextColIndex = colIndexBefore;
-            const nextCellMeta = getCellMeta(nextRowIndex, nextColIndex);
+            const nextCellMeta = apiRef.current.unstable_getCellSize(nextRowIndex, nextColIndex);
             if (nextCellMeta && nextCellMeta.spanned) {
               nextColIndex = nextCellMeta.prevCellIndex;
             }
@@ -218,7 +215,7 @@ export const useGridKeyboardNavigation = (
         event.preventDefault();
       }
     },
-    [apiRef, currentPage.range, visibleSortedRows, colCount, goToCell, goToHeader, getCellMeta],
+    [apiRef, currentPage.range, visibleSortedRows, colCount, goToCell, goToHeader],
   );
 
   const handleColumnHeaderKeyDown = React.useCallback<
@@ -245,7 +242,10 @@ export const useGridKeyboardNavigation = (
         case 'ArrowDown': {
           if (firstRowIndexInPage !== null) {
             let nextColIndex = colIndexBefore;
-            const nextCellMeta = getCellMeta(firstRowIndexInPage, colIndexBefore);
+            const nextCellMeta = apiRef.current.unstable_getCellSize(
+              firstRowIndexInPage,
+              colIndexBefore,
+            );
             if (nextCellMeta && nextCellMeta.spanned) {
               nextColIndex = nextCellMeta.prevCellIndex;
             }
@@ -309,7 +309,7 @@ export const useGridKeyboardNavigation = (
         event.preventDefault();
       }
     },
-    [apiRef, colCount, currentPage, goToCell, goToHeader, getCellMeta],
+    [apiRef, colCount, currentPage, goToCell, goToHeader],
   );
 
   useGridApiEventHandler(apiRef, GridEvents.cellNavigationKeyDown, handleCellNavigationKeyDown);

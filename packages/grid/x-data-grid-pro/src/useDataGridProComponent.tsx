@@ -33,6 +33,7 @@ import { useGridColumnPinning } from '../../_modules_/grid/hooks/features/column
 import { useGridStatePersistence } from '../../_modules_/grid/hooks/features/statePersistence/useGridStatePersistence';
 import { useGridDetailPanel } from '../../_modules_/grid/hooks/features/detailPanel/useGridDetailPanel';
 import { useGridDetailPanelCache } from '../../_modules_/grid/hooks/features/detailPanel/useGridDetailPanelCache';
+import { useGridCellsColSpan } from '../../_modules_/grid/hooks/features/cells/useGridCellsColSpan';
 import { DataGridProcessedProps } from '../../_modules_/grid/models/props/DataGridProps';
 import { GridApiPro } from '../../_modules_/grid/models/api/gridApiPro';
 
@@ -71,6 +72,7 @@ export const useDataGridProComponent = (
   useGridDimensions(apiRef, props);
   useGridEvents(apiRef, props);
   useGridStatePersistence(apiRef);
+  useGridCellsColSpan(apiRef);
 
   return apiRef;
 };
