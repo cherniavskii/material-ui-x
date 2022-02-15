@@ -1,12 +1,12 @@
 import React from 'react';
-import { GridState } from '../../../models/gridState';
-import { GridApiRef } from '../../../models/api/gridApiRef';
+import { GridStateCommunity } from '../../../models/gridStateCommunity';
+import { GridApiCommon } from '../../../models/api/gridApiCommon';
 import { useGridStateInit } from '../../utils/useGridStateInit';
 import { GridRowIndex, GridColumnIndex, GridCellMeta } from './gridCellsMetaState';
 
-const gridCellsMetaSelector = (state: GridState) => state.cellsMeta;
+const gridCellsMetaSelector = (state: GridStateCommunity) => state.cellsMeta;
 
-export const useGridCellsMeta = (apiRef: GridApiRef) => {
+export const useGridCellsMeta = (apiRef: React.MutableRefObject<GridApiCommon>) => {
   useGridStateInit(apiRef, (state) => ({
     ...state,
     cellsMeta: {
