@@ -1,8 +1,13 @@
 import * as React from 'react';
-import { createRenderer } from '@mui/monorepo/test/utils';
+import { createRenderer, fireEvent } from '@mui/monorepo/test/utils';
 import { expect } from 'chai';
-import { DataGridPro } from '@mui/x-data-grid-pro';
-import { getCell } from 'test/utils/helperFn';
+import { DataGridPro, GridApi, useGridApiRef } from '@mui/x-data-grid-pro';
+import { getActiveCell, getCell } from 'test/utils/helperFn';
+
+function fireClickEvent(cell: HTMLElement) {
+  fireEvent.mouseUp(cell);
+  fireEvent.click(cell);
+}
 
 describe('<DataGridPro /> - Column Spanning', () => {
   const { render } = createRenderer({ clock: 'fake' });
@@ -68,5 +73,46 @@ describe('<DataGridPro /> - Column Spanning', () => {
     expect(() => getCell(0, 0)).to.not.throw();
     expect(() => getCell(0, 1)).to.throw(/not found/);
     expect(() => getCell(0, 2)).to.not.throw();
+  });
+
+  /* eslint-disable material-ui/disallow-active-element-as-key-event-target */
+  describe('key navigation', () => {
+    const columns = [
+      {
+        field: 'brand',
+        colSpan: ({ row }) => (row.brand === 'Nike' ? 2 : 1),
+      },
+      {
+        field: 'category',
+        colSpan: ({ row }) => (row.brand === 'Adidas' ? 2 : 1),
+      },
+      {
+        field: 'price',
+        colSpan: ({ row }) => (row.brand === 'Puma' ? 2 : 1),
+      },
+      { field: 'rating' },
+    ];
+
+    it('should work after column reordering', () => {
+      let apiRef: React.MutableRefObject<GridApi>;
+
+      const Test = () => {
+        apiRef = useGridApiRef();
+
+        return (
+          <div style={{ width: 500, height: 300 }}>
+            <DataGridPro apiRef={apiRef} {...baselineProps} columns={columns} />
+          </div>
+        );
+      };
+
+      render(<Test />);
+
+      apiRef!.current.setColumnIndex('price', 1);
+
+      fireClickEvent(getCell(1, 1));
+      fireEvent.keyDown(document.activeElement!, { key: 'ArrowRight' });
+      expect(getActiveCell()).to.equal('1-2');
+    });
   });
 });
