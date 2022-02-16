@@ -4,6 +4,8 @@ import { useGridApiMethod } from '../../utils/useGridApiMethod';
 import { GridColumnIndex, GridCellMeta } from '../../../models/gridCellsColSpan';
 import { GridRowId } from '../../../models/gridRows';
 import { GridCellsColSpan } from '../../../models/api/gridCellsColSpan';
+import { useGridApiEventHandler } from '../../utils/useGridApiEventHandler';
+import { GridEvents } from '../../../models/events/gridEvents';
 
 export const useGridCellsColSpan = (apiRef: React.MutableRefObject<GridApiCommon>) => {
   const lookup = React.useRef<Record<GridRowId, Record<GridColumnIndex, GridCellMeta>>>({});
@@ -83,4 +85,11 @@ export const useGridCellsColSpan = (apiRef: React.MutableRefObject<GridApiCommon
   };
 
   useGridApiMethod(apiRef, cellsMetaApi, 'GridCellsMetaApi');
+
+  const handleColumnReorderChange = React.useCallback(() => {
+    // `colSpan` needs to be recalculated after column reordering
+    lookup.current = {};
+  }, []);
+
+  useGridApiEventHandler(apiRef, GridEvents.columnOrderChange, handleColumnReorderChange);
 };
