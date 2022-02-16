@@ -505,3 +505,30 @@ export function ColumnSpanning() {
     </div>
   );
 }
+
+export function ColumnSpanningWithVirtualization() {
+  const { data } = useDemoData({
+    dataSet: 'Commodity',
+    rowLength: 100,
+    maxColumns: 12,
+  });
+
+  const columns = data.columns.map((column) => ({
+    ...column,
+    colSpan:
+      column.field === 'commodity'
+        ? ({ row }) => {
+            if (row.commodity === 'Rapeseed') {
+              return 3;
+            }
+            return 1;
+          }
+        : 1,
+  }));
+
+  return (
+    <div style={{ width: '100%', height: 400 }}>
+      <DataGridPro showCellRightBorder showColumnRightBorder {...data} columns={columns} />
+    </div>
+  );
+}
