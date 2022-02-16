@@ -1,5 +1,6 @@
 import { GridCellParams } from '../params/gridCellParams';
-import { GridRowIndex, GridColumnIndex, GridCellMeta } from '../gridCellsColSpan';
+import { GridColumnIndex, GridCellMeta } from '../gridCellsColSpan';
+import { GridRowId } from '../gridRows';
 /**
  * The Cells Meta API interface that is available in the grid `apiRef`.
  */
@@ -7,12 +8,12 @@ export interface GridCellsColSpan {
   // TODO
   unstable_calculateCellSize: (params: {
     columnIndex: number;
-    rowIndex: number;
+    rowId: GridRowId;
     cellParams: GridCellParams;
   }) => { colSpan: number; width: number };
   // TODO
   unstable_getCellSize: (
-    rowIndex: GridRowIndex,
+    rowId: GridRowId,
     columnIndex: GridColumnIndex,
   ) => GridCellMeta | undefined;
 }

@@ -1,4 +1,3 @@
-export type GridRowIndex = number;
 export type GridColumnIndex = number;
 
 export interface GridCellMeta {

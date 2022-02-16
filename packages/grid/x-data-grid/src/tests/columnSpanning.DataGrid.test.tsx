@@ -322,6 +322,7 @@ describe('<DataGrid /> - Column Spanning', () => {
       fireEvent.keyDown(document.activeElement!, { key: 'ArrowDown' });
       const activeCell = getActiveCell();
       // TODO: shouldn't it be 3-0? Looks like data-rowindex is not stable in virtualized mode
+      // Should be fixed by https://github.com/mui/mui-x/pull/3882
       expect(activeCell).to.equal('4-0');
     });
   });

@@ -205,7 +205,7 @@ function GridRow(props: React.HTMLAttributes<HTMLDivElement> & GridRowProps) {
 
     const cellProps = apiRef.current.unstable_calculateCellSize({
       columnIndex: indexRelativeToAllColumns,
-      rowIndex: index,
+      rowId,
       cellParams,
     });
 

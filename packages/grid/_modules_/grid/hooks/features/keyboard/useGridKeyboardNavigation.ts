@@ -36,13 +36,9 @@ export const useGridKeyboardNavigation = (
    * @closestColResolution Which closest column cell to focus when cell has `colSpan`.
    */
   const goToCell = React.useCallback(
-    (
-      colIndex: number,
-      rowIndex: number,
-
-      closestColResolution: 'left' | 'right' = 'left',
-    ) => {
-      const nextCellMeta = apiRef.current.unstable_getCellSize(rowIndex, colIndex);
+    (colIndex: number, rowIndex: number, closestColResolution: 'left' | 'right' = 'left') => {
+      const rowId = apiRef.current.getRowIdFromRowIndex(rowIndex);
+      const nextCellMeta = apiRef.current.unstable_getCellSize(rowId, colIndex);
       if (nextCellMeta && nextCellMeta.spanned) {
         if (closestColResolution === 'left') {
           colIndex = nextCellMeta.prevCellIndex;
@@ -52,10 +48,7 @@ export const useGridKeyboardNavigation = (
       }
       logger.debug(`Navigating to cell row ${rowIndex}, col ${colIndex}`);
       apiRef.current.scrollToIndexes({ colIndex, rowIndex });
-      // here we need to know that the cell has colspan and we need to skip few columns
-      const visibleColumns = apiRef.current.getVisibleColumns();
-
-      const field = visibleColumns[colIndex].field;
+      const field = apiRef.current.getVisibleColumns()[colIndex].field;
       const node = visibleSortedRows[rowIndex];
       apiRef.current.setCellFocus(node.id, field);
     },
