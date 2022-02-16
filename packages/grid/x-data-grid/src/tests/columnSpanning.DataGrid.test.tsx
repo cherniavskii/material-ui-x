@@ -101,7 +101,7 @@ describe('<DataGrid /> - Column Spanning', () => {
   });
 
   /* eslint-disable material-ui/disallow-active-element-as-key-event-target */
-  describe('should handle key navigation', () => {
+  describe('key navigation', () => {
     const columns = [
       {
         field: 'brand',
@@ -261,6 +261,68 @@ describe('<DataGrid /> - Column Spanning', () => {
       await waitFor(() => {
         expect(getActiveCell()).to.equal('0-0');
       });
+    });
+
+    it('should work with row virtualization', async () => {
+      const rows = [
+        {
+          id: 0,
+          brand: 'Nike',
+          category: 'Shoes',
+          price: '$120',
+        },
+        {
+          id: 1,
+          brand: 'Nike',
+          category: 'Shoes',
+          price: '$120',
+        },
+        {
+          id: 2,
+          brand: 'Nike',
+          category: 'Shoes',
+          price: '$120',
+        },
+
+        {
+          id: 3,
+          brand: 'Adidas',
+          category: 'Shoes',
+          price: '$100',
+        },
+      ];
+
+      const rowHeight = 52;
+
+      render(
+        <div style={{ width: 500, height: (rows.length + 1) * rowHeight }}>
+          <DataGrid
+            columns={[
+              { field: 'brand', colSpan: ({ row }) => (row.brand === 'Adidas' ? 2 : 1) },
+              { field: 'category' },
+              { field: 'price' },
+            ]}
+            rows={rows}
+            rowBuffer={1}
+            rowThreshold={1}
+            rowHeight={rowHeight}
+          />
+        </div>,
+      );
+
+      fireClickEvent(getCell(1, 1));
+      expect(getActiveCell()).to.equal('1-1');
+
+      fireEvent.keyDown(document.activeElement!, { key: 'ArrowDown' });
+
+      const virtualScroller = document.querySelector('.MuiDataGrid-virtualScroller')!;
+      // trigger virtualization
+      virtualScroller.dispatchEvent(new Event('scroll'));
+
+      fireEvent.keyDown(document.activeElement!, { key: 'ArrowDown' });
+      const activeCell = getActiveCell();
+      // TODO: shouldn't it be 3-0? Looks like data-rowindex is not stable in virtualized mode
+      expect(activeCell).to.equal('4-0');
     });
   });
 
