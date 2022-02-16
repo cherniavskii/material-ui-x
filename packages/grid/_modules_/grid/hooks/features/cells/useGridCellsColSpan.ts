@@ -3,13 +3,9 @@ import { GridApiCommon } from '../../../models/api/gridApiCommon';
 import { useGridApiMethod } from '../../utils/useGridApiMethod';
 import { GridCellParams } from '../../../models/params/gridCellParams';
 import { GridRowIndex, GridColumnIndex, GridCellMeta } from '../../../models/gridCellsColSpan';
-import { useGridSelector } from '../../utils/useGridSelector';
-import { visibleGridColumnsSelector } from '../columns/gridColumnsSelector';
 
 export const useGridCellsColSpan = (apiRef: React.MutableRefObject<GridApiCommon>) => {
   const lookup = React.useRef<Record<GridRowIndex, Record<GridColumnIndex, GridCellMeta>>>({});
-
-  const visibleColumns = useGridSelector(apiRef, visibleGridColumnsSelector);
 
   const setCellMeta = React.useCallback(
     (rowIndex: GridRowIndex, columnIndex: GridColumnIndex, size: GridCellMeta) => {
@@ -40,6 +36,7 @@ export const useGridCellsColSpan = (apiRef: React.MutableRefObject<GridApiCommon
       rowIndex: number;
       cellParams: GridCellParams;
     }) => {
+      const visibleColumns = apiRef.current.getVisibleColumns();
       const columnsLength = visibleColumns.length;
       const column = visibleColumns[columnIndex];
 
@@ -84,7 +81,7 @@ export const useGridCellsColSpan = (apiRef: React.MutableRefObject<GridApiCommon
         ...dataColSpanAttributes,
       };
     },
-    [setCellMeta, visibleColumns],
+    [apiRef, setCellMeta],
   );
 
   const cellsMetaApi = {
