@@ -207,6 +207,7 @@ function GridRow(props: React.HTMLAttributes<HTMLDivElement> & GridRowProps) {
       columnIndex: indexRelativeToAllColumns,
       rowId,
       cellParams,
+      renderedColumns,
     });
 
     const { colSpan, width, ...otherCellProps } = cellProps;

@@ -1,9 +1,9 @@
 import React from 'react';
 import { GridApiCommon } from '../../../models/api/gridApiCommon';
 import { useGridApiMethod } from '../../utils/useGridApiMethod';
-import { GridCellParams } from '../../../models/params/gridCellParams';
 import { GridColumnIndex, GridCellMeta } from '../../../models/gridCellsColSpan';
 import { GridRowId } from '../../../models/gridRows';
+import { GridCellsColSpan } from '../../../models/api/gridCellsColSpan';
 
 export const useGridCellsColSpan = (apiRef: React.MutableRefObject<GridApiCommon>) => {
   const lookup = React.useRef<Record<GridRowId, Record<GridColumnIndex, GridCellMeta>>>({});
@@ -20,23 +20,15 @@ export const useGridCellsColSpan = (apiRef: React.MutableRefObject<GridApiCommon
     [],
   );
 
-  const getCellMeta = React.useCallback(
+  const getCellMeta = React.useCallback<GridCellsColSpan['unstable_getCellSize']>(
     (rowId: GridRowId, columnIndex: GridColumnIndex): GridCellMeta | undefined => {
       return lookup.current[rowId]?.[columnIndex];
     },
     [],
   );
 
-  const getCellProps = React.useCallback(
-    ({
-      columnIndex,
-      rowId,
-      cellParams,
-    }: {
-      columnIndex: number;
-      rowId: GridRowId;
-      cellParams: GridCellParams;
-    }) => {
+  const getCellProps = React.useCallback<GridCellsColSpan['unstable_calculateCellSize']>(
+    ({ columnIndex, rowId, cellParams, renderedColumns }) => {
       const visibleColumns = apiRef.current.getVisibleColumns();
       const columnsLength = visibleColumns.length;
       const column = visibleColumns[columnIndex];
@@ -57,8 +49,8 @@ export const useGridCellsColSpan = (apiRef: React.MutableRefObject<GridApiCommon
       if (colSpan > 1) {
         for (let j = 1; j < colSpan; j += 1) {
           const nextColumnIndex = columnIndex + j;
-          if (visibleColumns[nextColumnIndex]) {
-            const nextColumn = visibleColumns[nextColumnIndex];
+          if (renderedColumns[nextColumnIndex]) {
+            const nextColumn = renderedColumns[nextColumnIndex];
             width += nextColumn.computedWidth;
             setCellMeta(rowId, columnIndex + j, {
               spanned: true,
@@ -85,7 +77,7 @@ export const useGridCellsColSpan = (apiRef: React.MutableRefObject<GridApiCommon
     [apiRef, setCellMeta],
   );
 
-  const cellsMetaApi = {
+  const cellsMetaApi: GridCellsColSpan = {
     unstable_calculateCellSize: getCellProps,
     unstable_getCellSize: getCellMeta,
   };
