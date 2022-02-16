@@ -125,7 +125,6 @@ export const useGridKeyboardNavigation = (
           } else if (!event.shiftKey && colIndexBefore < lastColIndex) {
             goToCell(colIndexBefore + 1, rowIndexBefore, 'right');
           }
-
           break;
         }
 
@@ -178,7 +177,7 @@ export const useGridKeyboardNavigation = (
         event.preventDefault();
       }
     },
-    [apiRef, currentPage.range, visibleSortedRows, colCount, goToCell, goToHeader],
+    [apiRef, visibleSortedRows, colCount, currentPage, goToCell, goToHeader],
   );
 
   const handleColumnHeaderKeyDown = React.useCallback<
