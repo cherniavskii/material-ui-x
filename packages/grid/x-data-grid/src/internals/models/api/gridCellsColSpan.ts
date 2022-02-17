@@ -1,5 +1,8 @@
+import {
+  GridColumnIndex,
+  GridCellMeta,
+} from '@mui/x-data-grid/src/internals/models/gridCellsColSpan';
 import { GridCellParams } from '../params/gridCellParams';
-import { GridColumnIndex, GridCellMeta } from '../gridCellsColSpan';
 import { GridRowId } from '../gridRows';
 import { GridStateColDef } from '../colDef/gridColDef';
 import { GridApiCommunity } from './gridApiCommunity';
