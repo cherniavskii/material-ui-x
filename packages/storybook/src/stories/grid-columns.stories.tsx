@@ -506,7 +506,7 @@ export function ColumnSpanning() {
   );
 }
 
-export function ColumnSpanningWithVirtualization() {
+export function ColumnSpanningWithRowVirtualization() {
   const { data } = useDemoData({
     dataSet: 'Commodity',
     rowLength: 100,
@@ -529,6 +529,24 @@ export function ColumnSpanningWithVirtualization() {
   return (
     <div style={{ width: '100%', height: 400 }}>
       <DataGridPro showCellRightBorder showColumnRightBorder {...data} columns={columns} />
+    </div>
+  );
+}
+
+export function ColumnSpanningWithColumnVirtualization() {
+  return (
+    <div style={{ width: 200, height: 200 }}>
+      <DataGridPro
+        columns={[
+          { field: 'col0', width: 100, colSpan: 3 },
+          { field: 'col1', width: 100 },
+          { field: 'col2', width: 100 },
+          { field: 'col3', width: 100 },
+        ]}
+        rows={[{ id: 0, col0: '0-0', col1: '0-1', col2: '0-2', col3: '0-3' }]}
+        columnBuffer={1}
+        columnThreshold={1}
+      />
     </div>
   );
 }
