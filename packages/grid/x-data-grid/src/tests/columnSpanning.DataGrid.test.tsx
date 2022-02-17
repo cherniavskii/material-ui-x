@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { createRenderer, fireEvent, waitFor } from '@mui/monorepo/test/utils';
 import { expect } from 'chai';
-import { DataGrid } from '@mui/x-data-grid';
+import { DataGrid, gridClasses } from '@mui/x-data-grid';
 import { getCell, getActiveCell } from 'test/utils/helperFn';
 
 function fireClickEvent(cell: HTMLElement) {
@@ -315,7 +315,7 @@ describe('<DataGrid /> - Column Spanning', () => {
 
       fireEvent.keyDown(document.activeElement!, { key: 'ArrowDown' });
 
-      const virtualScroller = document.querySelector('.MuiDataGrid-virtualScroller')!;
+      const virtualScroller = document.querySelector(`.${gridClasses.virtualScroller}`)!;
       // trigger virtualization
       virtualScroller.dispatchEvent(new Event('scroll'));
 
@@ -324,6 +324,35 @@ describe('<DataGrid /> - Column Spanning', () => {
       // TODO: shouldn't it be 3-0? Looks like data-rowindex is not stable in virtualized mode
       // Should be fixed by https://github.com/mui/mui-x/pull/3882
       expect(activeCell).to.equal('4-0');
+    });
+
+    it('should work with column virtualization', () => {
+      render(
+        <div style={{ width: 200, height: 200 }}>
+          <DataGrid
+            columns={[
+              { field: 'col0', width: 100, colSpan: 3 },
+              { field: 'col1', width: 100 },
+              { field: 'col2', width: 100 },
+              { field: 'col3', width: 100 },
+            ]}
+            rows={[{ id: 0, col0: '0-0', col1: '0-1', col2: '0-2', col3: '0-3' }]}
+            columnBuffer={1}
+            columnThreshold={1}
+          />
+        </div>,
+      );
+
+      const virtualScroller = document.querySelector(`.${gridClasses.virtualScroller}`)!;
+
+      virtualScroller.scrollLeft = 200;
+      virtualScroller.dispatchEvent(new Event('scroll'));
+
+      fireClickEvent(getCell(0, 3));
+
+      expect(() => getCell(0, 3)).to.not.throw();
+      // should be hidden because of first column colSpan
+      expect(() => getCell(0, 2)).to.throw(/not found/);
     });
   });
 
