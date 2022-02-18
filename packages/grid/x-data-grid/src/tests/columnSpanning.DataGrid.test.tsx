@@ -354,6 +354,47 @@ describe('<DataGrid /> - Column Spanning', () => {
       // should be hidden because of first column colSpan
       expect(() => getCell(0, 2)).to.throw(/not found/);
     });
+
+    it('should scroll the whole cell into view when `colSpan` > 1', () => {
+      render(
+        <div style={{ width: 200, height: 200 }}>
+          <DataGrid
+            columns={[
+              { field: 'col0', width: 100, colSpan: 2 },
+              { field: 'col1', width: 100 },
+              { field: 'col2', width: 100 },
+              { field: 'col3', width: 100, colSpan: 2 },
+              { field: 'col4', width: 100 },
+            ]}
+            rows={[{ id: 0, col0: '0-0', col1: '0-1', col2: '0-2', col3: '0-3', col4: '0-4' }]}
+            columnBuffer={1}
+            columnThreshold={1}
+          />
+        </div>,
+      );
+
+      fireClickEvent(getCell(0, 0));
+
+      const virtualScroller = document.querySelector(
+        `.${gridClasses.virtualScroller}`,
+      )! as HTMLElement;
+
+      fireEvent.keyDown(document.activeElement!, { key: 'ArrowRight' });
+      virtualScroller.dispatchEvent(new Event('scroll'));
+      fireEvent.keyDown(document.activeElement!, { key: 'ArrowRight' });
+      virtualScroller.dispatchEvent(new Event('scroll'));
+      expect(getActiveCell()).to.equal('0-3');
+      // should be scrolled to the end of the cell
+      expect(virtualScroller.scrollLeft).to.equal(5 * 100 - virtualScroller.offsetWidth);
+
+      fireEvent.keyDown(document.activeElement!, { key: 'ArrowLeft' });
+      virtualScroller.dispatchEvent(new Event('scroll'));
+      fireEvent.keyDown(document.activeElement!, { key: 'ArrowLeft' });
+      virtualScroller.dispatchEvent(new Event('scroll'));
+
+      expect(getActiveCell()).to.equal('0-0');
+      expect(virtualScroller.scrollLeft).to.equal(0);
+    });
   });
 
   it('should work with filtering', () => {
