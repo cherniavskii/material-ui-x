@@ -63,10 +63,22 @@ export const useGridScroll = (
       let scrollCoordinates: Partial<GridScrollParams> = {};
 
       if (params.colIndex != null) {
+        let cellWidth: number | undefined;
+
+        if (typeof params.rowIndex !== 'undefined') {
+          const rowId = apiRef.current.getRowIdFromRowIndex(params.rowIndex);
+          const cellSize = apiRef.current.unstable_getCellSize(rowId, params.colIndex);
+          cellWidth = cellSize.cellProps.width;
+        }
+
+        if (typeof cellWidth === 'undefined') {
+          cellWidth = visibleColumns[params.colIndex].computedWidth;
+        }
+
         scrollCoordinates.left = scrollIntoView({
           clientHeight: windowRef.current!.clientWidth,
           scrollTop: windowRef.current!.scrollLeft,
-          offsetHeight: visibleColumns[params.colIndex].computedWidth,
+          offsetHeight: cellWidth,
           offsetTop: columnsMeta.positions[params.colIndex],
         });
       }
