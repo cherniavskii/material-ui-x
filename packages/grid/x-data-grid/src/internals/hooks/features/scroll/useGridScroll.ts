@@ -15,6 +15,7 @@ import { GridScrollParams } from '../../../models/params/gridScrollParams';
 import { GridScrollApi } from '../../../models/api/gridScrollApi';
 import { useGridApiMethod } from '../../utils/useGridApiMethod';
 import { useGridNativeEventListener } from '../../utils/useGridNativeEventListener';
+import { gridVisibleSortedRowEntriesSelector } from '../filter/gridFilterSelector';
 
 // Logic copied from https://www.w3.org/TR/wai-aria-practices/examples/listbox/js/listbox.js
 // Similar to https://developer.mozilla.org/en-US/docs/Web/API/Element/scrollIntoView
@@ -51,6 +52,7 @@ export const useGridScroll = (
   const visibleColumns = useGridSelector(apiRef, visibleGridColumnsSelector);
   const columnsMeta = useGridSelector(apiRef, gridColumnsMetaSelector);
   const rowsMeta = useGridSelector(apiRef, gridRowsMetaSelector);
+  const visibleSortedRows = useGridSelector(apiRef, gridVisibleSortedRowEntriesSelector);
 
   const scrollToIndexes = React.useCallback<GridScrollApi['scrollToIndexes']>(
     (params: Partial<GridCellIndexCoordinates>) => {
@@ -66,7 +68,7 @@ export const useGridScroll = (
         let cellWidth: number | undefined;
 
         if (typeof params.rowIndex !== 'undefined') {
-          const rowId = apiRef.current.getRowIdFromRowIndex(params.rowIndex);
+          const rowId = visibleSortedRows[params.rowIndex]?.id;
           const cellMeta = apiRef.current.unstable_getCellSize(rowId, params.colIndex);
           if (!cellMeta.collapsedByColSpan) {
             cellWidth = cellMeta.cellProps.width;
@@ -129,6 +131,7 @@ export const useGridScroll = (
       paginationState.pageSize,
       rowsMeta.positions,
       rowsMeta.currentPageTotalHeight,
+      visibleSortedRows,
     ],
   );
 

@@ -37,7 +37,7 @@ export const useGridKeyboardNavigation = (
    */
   const goToCell = React.useCallback(
     (colIndex: number, rowIndex: number, closestColResolution: 'left' | 'right' = 'left') => {
-      const rowId = apiRef.current.getRowIdFromRowIndex(rowIndex);
+      const rowId = visibleSortedRows[rowIndex]?.id;
       const nextCellMeta = apiRef.current.unstable_getCellSize(rowId, colIndex);
       if (nextCellMeta.collapsedByColSpan) {
         if (closestColResolution === 'left') {
