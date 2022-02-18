@@ -355,6 +355,85 @@ describe('<DataGrid /> - Column Spanning', () => {
       expect(() => getCell(0, 2)).to.throw(/not found/);
     });
 
+    it('should work with filtering', () => {
+      render(
+        <div style={{ width: 500, height: 300 }}>
+          <DataGrid
+            {...baselineProps}
+            columns={[
+              {
+                field: 'brand',
+                colSpan: ({ row }) => (row.brand === 'Nike' ? 2 : 1),
+              },
+              { field: 'category' },
+              { field: 'price' },
+              { field: 'rating' },
+            ]}
+            rows={[
+              {
+                id: 0,
+                brand: 'Nike',
+                category: 'Shoes',
+                price: '$120',
+                rating: '4.5',
+              },
+              {
+                id: 1,
+                brand: 'Adidas',
+                category: 'Shoes',
+                price: '$100',
+                rating: '4.5',
+              },
+              {
+                id: 2,
+                brand: 'Puma',
+                category: 'Shoes',
+                price: '$90',
+                rating: '4.5',
+              },
+              {
+                id: 3,
+                brand: 'Nike',
+                category: 'Shoes',
+                price: '$120',
+                rating: '4.5',
+              },
+              {
+                id: 4,
+                brand: 'Adidas',
+                category: 'Shoes',
+                price: '$100',
+                rating: '4.5',
+              },
+              {
+                id: 5,
+                brand: 'Puma',
+                category: 'Shoes',
+                price: '$90',
+                rating: '4.5',
+              },
+            ]}
+            initialState={{
+              filter: {
+                filterModel: {
+                  items: [{ columnField: 'brand', operatorValue: 'equals', value: 'Nike' }],
+                },
+              },
+            }}
+          />
+        </div>,
+      );
+
+      fireClickEvent(getCell(0, 0));
+      expect(getActiveCell()).to.equal('0-0');
+
+      fireEvent.keyDown(document.activeElement!, { key: 'ArrowDown' });
+      expect(getActiveCell()).to.equal('1-0');
+
+      fireEvent.keyDown(document.activeElement!, { key: 'AroowRight' });
+      expect(getActiveCell()).to.equal('1-2');
+    });
+
     it('should scroll the whole cell into view when `colSpan` > 1', () => {
       render(
         <div style={{ width: 200, height: 200 }}>

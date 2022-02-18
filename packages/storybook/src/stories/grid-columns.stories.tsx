@@ -550,3 +550,72 @@ export function ColumnSpanningWithColumnVirtualization() {
     </div>
   );
 }
+
+export function ColumnSpanningWithFiltering() {
+  return (
+    <div style={{ width: 500, height: 300 }}>
+      <DataGridPro
+        columns={[
+          {
+            field: 'brand',
+            colSpan: ({ row }) => (row.brand === 'Nike' ? 2 : 1),
+          },
+          { field: 'category' },
+          { field: 'price' },
+          { field: 'rating' },
+        ]}
+        rows={[
+          {
+            id: 0,
+            brand: 'Nike',
+            category: 'Shoes',
+            price: '$120',
+            rating: '4.5',
+          },
+          {
+            id: 1,
+            brand: 'Adidas',
+            category: 'Shoes',
+            price: '$100',
+            rating: '4.5',
+          },
+          {
+            id: 2,
+            brand: 'Puma',
+            category: 'Shoes',
+            price: '$90',
+            rating: '4.5',
+          },
+          {
+            id: 3,
+            brand: 'Nike',
+            category: 'Shoes',
+            price: '$120',
+            rating: '4.5',
+          },
+          {
+            id: 4,
+            brand: 'Adidas',
+            category: 'Shoes',
+            price: '$100',
+            rating: '4.5',
+          },
+          {
+            id: 5,
+            brand: 'Puma',
+            category: 'Shoes',
+            price: '$90',
+            rating: '4.5',
+          },
+        ]}
+        initialState={{
+          filter: {
+            filterModel: {
+              items: [{ columnField: 'brand', operatorValue: 'equals', value: 'Nike' }],
+            },
+          },
+        }}
+      />
+    </div>
+  );
+}
