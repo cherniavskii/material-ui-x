@@ -67,8 +67,10 @@ export const useGridScroll = (
 
         if (typeof params.rowIndex !== 'undefined') {
           const rowId = apiRef.current.getRowIdFromRowIndex(params.rowIndex);
-          const cellSize = apiRef.current.unstable_getCellSize(rowId, params.colIndex);
-          cellWidth = cellSize.cellProps.width;
+          const cellMeta = apiRef.current.unstable_getCellSize(rowId, params.colIndex);
+          if (!cellMeta.collapsedByColSpan) {
+            cellWidth = cellMeta.cellProps.width;
+          }
         }
 
         if (typeof cellWidth === 'undefined') {

@@ -70,19 +70,16 @@ export const useGridCellsColSpan = (apiRef: React.MutableRefObject<GridApiCommon
             dataColSpanAttributes[`data-colspan-allocates-field-${nextColumn.field}`] = '1';
 
             setCellMeta(rowId, columnIndex + j, {
-              spanned: true,
-              nextCellIndex: Math.min(columnIndex + colSpan, columnsLength - 1),
-              prevCellIndex: columnIndex,
-              cellProps: {},
+              collapsedByColSpan: true,
+              rightVisibleCellIndex: Math.min(columnIndex + colSpan, columnsLength - 1),
+              leftVisibleCellIndex: columnIndex,
             });
           }
         }
       }
 
       setCellMeta(rowId, columnIndex, {
-        spanned: false,
-        nextCellIndex: columnIndex + 1,
-        prevCellIndex: columnIndex - 1,
+        collapsedByColSpan: false,
         cellProps: {
           colSpan,
           width,

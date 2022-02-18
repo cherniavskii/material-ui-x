@@ -39,11 +39,11 @@ export const useGridKeyboardNavigation = (
     (colIndex: number, rowIndex: number, closestColResolution: 'left' | 'right' = 'left') => {
       const rowId = apiRef.current.getRowIdFromRowIndex(rowIndex);
       const nextCellMeta = apiRef.current.unstable_getCellSize(rowId, colIndex);
-      if (nextCellMeta && nextCellMeta.spanned) {
+      if (nextCellMeta.collapsedByColSpan) {
         if (closestColResolution === 'left') {
-          colIndex = nextCellMeta.prevCellIndex;
+          colIndex = nextCellMeta.leftVisibleCellIndex;
         } else if (closestColResolution === 'right') {
-          colIndex = nextCellMeta.nextCellIndex;
+          colIndex = nextCellMeta.rightVisibleCellIndex;
         }
       }
       logger.debug(`Navigating to cell row ${rowIndex}, col ${colIndex}`);
