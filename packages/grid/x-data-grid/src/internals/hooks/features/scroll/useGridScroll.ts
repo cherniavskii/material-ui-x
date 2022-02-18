@@ -70,7 +70,7 @@ export const useGridScroll = (
         if (typeof params.rowIndex !== 'undefined') {
           const rowId = visibleSortedRows[params.rowIndex]?.id;
           const cellMeta = apiRef.current.unstable_getCellSize(rowId, params.colIndex);
-          if (!cellMeta.collapsedByColSpan) {
+          if (cellMeta && !cellMeta.collapsedByColSpan) {
             cellWidth = cellMeta.cellProps.width;
           }
         }

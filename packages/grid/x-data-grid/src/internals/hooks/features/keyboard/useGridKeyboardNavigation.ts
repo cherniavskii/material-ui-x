@@ -39,7 +39,7 @@ export const useGridKeyboardNavigation = (
     (colIndex: number, rowIndex: number, closestColResolution: 'left' | 'right' = 'left') => {
       const rowId = visibleSortedRows[rowIndex]?.id;
       const nextCellMeta = apiRef.current.unstable_getCellSize(rowId, colIndex);
-      if (nextCellMeta.collapsedByColSpan) {
+      if (nextCellMeta && nextCellMeta.collapsedByColSpan) {
         if (closestColResolution === 'left') {
           colIndex = nextCellMeta.leftVisibleCellIndex;
         } else if (closestColResolution === 'right') {

@@ -205,7 +205,7 @@ function GridRow(props: React.HTMLAttributes<HTMLDivElement> & GridRowProps) {
 
     const cellMeta = apiRef.current.unstable_getCellSize(rowId, indexRelativeToAllColumns);
 
-    if (!cellMeta.collapsedByColSpan) {
+    if (cellMeta && !cellMeta.collapsedByColSpan) {
       const { colSpan, width, other: otherCellProps } = cellMeta.cellProps;
 
       cells.push(
