@@ -430,7 +430,7 @@ describe('<DataGrid /> - Column Spanning', () => {
       fireEvent.keyDown(document.activeElement!, { key: 'ArrowDown' });
       expect(getActiveCell()).to.equal('1-0');
 
-      fireEvent.keyDown(document.activeElement!, { key: 'AroowRight' });
+      fireEvent.keyDown(document.activeElement!, { key: 'ArrowRight' });
       expect(getActiveCell()).to.equal('1-2');
     });
 
