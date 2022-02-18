@@ -203,43 +203,35 @@ function GridRow(props: React.HTMLAttributes<HTMLDivElement> & GridRowProps) {
         ? 0
         : -1;
 
-    const cellProps = apiRef.current.unstable_calculateCellSize({
-      columnIndex: indexRelativeToAllColumns,
-      rowId,
-      cellParams,
-      renderedColumns,
-    });
+    const cellMeta = apiRef.current.unstable_getCellSize(rowId, indexRelativeToAllColumns);
+    const { colSpan, width, other: otherCellProps } = cellMeta.cellProps;
 
-    const { colSpan, width, ...otherCellProps } = cellProps;
-
-    if (colSpan > 1) {
-      i += colSpan - 1;
+    if (!cellMeta.spanned) {
+      cells.push(
+        <rootProps.components.Cell
+          key={column.field}
+          value={cellParams.value}
+          field={column.field}
+          width={width}
+          rowId={rowId}
+          height={rowHeight}
+          showRightBorder={showRightBorder}
+          formattedValue={cellParams.formattedValue}
+          align={column.align || 'left'}
+          cellMode={cellParams.cellMode}
+          colIndex={indexRelativeToAllColumns}
+          isEditable={cellParams.isEditable}
+          hasFocus={hasFocus}
+          tabIndex={tabIndex}
+          className={clsx(classNames)}
+          colSpan={colSpan}
+          {...otherCellProps}
+          {...rootProps.componentsProps?.cell}
+        >
+          {content}
+        </rootProps.components.Cell>,
+      );
     }
-
-    cells.push(
-      <rootProps.components.Cell
-        key={column.field}
-        value={cellParams.value}
-        field={column.field}
-        width={width}
-        rowId={rowId}
-        height={rowHeight}
-        showRightBorder={showRightBorder}
-        formattedValue={cellParams.formattedValue}
-        align={column.align || 'left'}
-        cellMode={cellParams.cellMode}
-        colIndex={indexRelativeToAllColumns}
-        isEditable={cellParams.isEditable}
-        hasFocus={hasFocus}
-        tabIndex={tabIndex}
-        className={clsx(classNames)}
-        colSpan={colSpan}
-        {...otherCellProps}
-        {...rootProps.componentsProps?.cell}
-      >
-        {content}
-      </rootProps.components.Cell>,
-    );
   }
 
   const emptyCellWidth = containerWidth - columnsMeta.totalWidth;

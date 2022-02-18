@@ -6,6 +6,9 @@ import { GridRowId } from '../../../models/gridRows';
 import { GridCellsColSpan } from '../../../models/api/gridCellsColSpan';
 import { useGridApiEventHandler } from '../../utils/useGridApiEventHandler';
 import { GridEvents } from '../../../models/events/gridEvents';
+import { GridCellParams } from '../../../models/params/gridCellParams';
+import { GridStateColDef } from '../../../models/colDef/gridColDef';
+import { GridApiCommunity } from '../../../models/api/gridApiCommunity';
 
 export const useGridCellsColSpan = (apiRef: React.MutableRefObject<GridApiCommon>) => {
   const lookup = React.useRef<Record<GridRowId, Record<GridColumnIndex, GridCellMeta>>>({});
@@ -23,14 +26,21 @@ export const useGridCellsColSpan = (apiRef: React.MutableRefObject<GridApiCommon
   );
 
   const getCellMeta = React.useCallback<GridCellsColSpan['unstable_getCellSize']>(
-    (rowId: GridRowId, columnIndex: GridColumnIndex): GridCellMeta | undefined => {
+    (rowId, columnIndex) => {
       return lookup.current[rowId]?.[columnIndex];
     },
     [],
   );
 
-  const getCellProps = React.useCallback<GridCellsColSpan['unstable_calculateCellSize']>(
-    ({ columnIndex, rowId, cellParams, renderedColumns }) => {
+  // Calculate `colSpan` for the cell.
+  const calculateCellColSpan = React.useCallback(
+    (params: {
+      columnIndex: number;
+      rowId: GridRowId;
+      cellParams: GridCellParams;
+      renderedColumns: GridStateColDef<GridApiCommunity>[];
+    }) => {
+      const { columnIndex, rowId, cellParams, renderedColumns } = params;
       const visibleColumns = apiRef.current.getVisibleColumns();
       const columnsLength = visibleColumns.length;
       const column = visibleColumns[columnIndex];
@@ -51,37 +61,66 @@ export const useGridCellsColSpan = (apiRef: React.MutableRefObject<GridApiCommon
       if (colSpan > 1) {
         for (let j = 1; j < colSpan; j += 1) {
           const nextColumnIndex = columnIndex + j;
-          if (renderedColumns[nextColumnIndex]) {
-            const nextColumn = renderedColumns[nextColumnIndex];
+          const nextColumn = visibleColumns[nextColumnIndex];
+          // TODO: consider using column field insteead of index. Is there a lookup?
+          // `renderedColumns` does not include pinned columns.
+          if (renderedColumns.includes(nextColumn)) {
             width += nextColumn.computedWidth;
+
+            dataColSpanAttributes[`data-colspan-allocates-field-${nextColumn.field}`] = '1';
+
             setCellMeta(rowId, columnIndex + j, {
               spanned: true,
               nextCellIndex: Math.min(columnIndex + colSpan, columnsLength - 1),
               prevCellIndex: columnIndex,
+              cellProps: {},
             });
-            dataColSpanAttributes[`data-colspan-allocates-field-${nextColumn.field}`] = '1';
           }
         }
-      } else {
-        setCellMeta(rowId, columnIndex, {
-          spanned: false,
-          nextCellIndex: columnIndex + 1,
-          prevCellIndex: columnIndex - 1,
-        });
       }
+
+      setCellMeta(rowId, columnIndex, {
+        spanned: false,
+        nextCellIndex: columnIndex + 1,
+        prevCellIndex: columnIndex - 1,
+        cellProps: {
+          colSpan,
+          width,
+          other: dataColSpanAttributes,
+        },
+      });
 
       return {
         colSpan,
-        width,
-        ...dataColSpanAttributes,
       };
     },
     [apiRef, setCellMeta],
   );
+  // Calculate `colSpan` for each cell in the row
+  const calculateRowColSpan = React.useCallback<GridCellsColSpan['unstable_calculateRowColSpan']>(
+    ({ rowId, minFirstColumn, maxLastColumn }) => {
+      const visibleColumns = apiRef.current.getVisibleColumns();
+      const renderedColumns = visibleColumns.slice(minFirstColumn, maxLastColumn);
+
+      for (let i = minFirstColumn; i < maxLastColumn; i += 1) {
+        const column = visibleColumns[i];
+        const cellProps = calculateCellColSpan({
+          columnIndex: i,
+          rowId,
+          renderedColumns,
+          cellParams: apiRef.current.getCellParams(rowId, column.field),
+        });
+        if (cellProps.colSpan > 1) {
+          i += cellProps.colSpan - 1;
+        }
+      }
+    },
+    [apiRef, calculateCellColSpan],
+  );
 
   const cellsMetaApi: GridCellsColSpan = {
-    unstable_calculateCellSize: getCellProps,
     unstable_getCellSize: getCellMeta,
+    unstable_calculateRowColSpan: calculateRowColSpan,
   };
 
   useGridApiMethod(apiRef, cellsMetaApi, 'GridCellsMetaApi');

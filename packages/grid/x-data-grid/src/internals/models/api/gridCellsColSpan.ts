@@ -2,24 +2,16 @@ import {
   GridColumnIndex,
   GridCellMeta,
 } from '@mui/x-data-grid/src/internals/models/gridCellsColSpan';
-import { GridCellParams } from '../params/gridCellParams';
 import { GridRowId } from '../gridRows';
-import { GridStateColDef } from '../colDef/gridColDef';
-import { GridApiCommunity } from './gridApiCommunity';
 /**
  * The Cells Meta API interface that is available in the grid `apiRef`.
  */
 export interface GridCellsColSpan {
   // TODO
-  unstable_calculateCellSize: (params: {
-    columnIndex: number;
+  unstable_getCellSize: (rowId: GridRowId, columnIndex: GridColumnIndex) => GridCellMeta;
+  unstable_calculateRowColSpan: (params: {
     rowId: GridRowId;
-    cellParams: GridCellParams;
-    renderedColumns: GridStateColDef<GridApiCommunity>[];
-  }) => { colSpan: number; width: number };
-  // TODO
-  unstable_getCellSize: (
-    rowId: GridRowId,
-    columnIndex: GridColumnIndex,
-  ) => GridCellMeta | undefined;
+    minFirstColumn: number;
+    maxLastColumn: number;
+  }) => void;
 }

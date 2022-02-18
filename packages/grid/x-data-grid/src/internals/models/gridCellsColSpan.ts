@@ -5,4 +5,9 @@ export interface GridCellMeta {
   spanned: boolean;
   nextCellIndex: GridColumnIndex;
   prevCellIndex: GridColumnIndex;
+  cellProps: {
+    colSpan?: number;
+    width?: number;
+    other?: Record<string, any>;
+  };
 }
