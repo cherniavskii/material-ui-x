@@ -100,6 +100,26 @@ describe('<DataGrid /> - Column Spanning', () => {
     expect(() => getCell(2, 3)).to.throw(/not found/);
   });
 
+  it('should treat `colSpan` 0 value as 1', () => {
+    render(
+      <div style={{ width: 500, height: 300 }}>
+        <DataGrid
+          {...baselineProps}
+          columns={[
+            { field: 'brand', colSpan: 0 },
+            { field: 'category', colSpan: () => 0 },
+            { field: 'price' },
+          ]}
+          rows={[{ id: 0, brand: 'Nike', category: 'Shoes', price: '$120' }]}
+        />
+      </div>,
+    );
+    // First Nike row
+    expect(() => getCell(0, 0)).to.not.throw();
+    expect(() => getCell(0, 1)).to.not.throw();
+    expect(() => getCell(0, 2)).to.not.throw();
+  });
+
   /* eslint-disable material-ui/disallow-active-element-as-key-event-target */
   describe('key navigation', () => {
     const columns = [
