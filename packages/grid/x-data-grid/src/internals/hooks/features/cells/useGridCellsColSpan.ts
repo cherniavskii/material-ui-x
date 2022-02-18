@@ -67,7 +67,13 @@ export const useGridCellsColSpan = (apiRef: React.MutableRefObject<GridApiCommon
           if (renderedColumns.includes(nextColumn)) {
             width += nextColumn.computedWidth;
 
-            dataColSpanAttributes[`data-colspan-allocates-field-${nextColumn.field}`] = '1';
+            dataColSpanAttributes[
+              /**
+               * `.toLowerCase()` is used to avoid React warning when using camelCase field name.
+               * querySelectorAll() still works when querying with camelCase field name.
+               */
+              `data-colspan-allocates-field-${nextColumn.field.toLowerCase()}`
+            ] = '1';
 
             setCellMeta(rowId, columnIndex + j, {
               collapsedByColSpan: true,
