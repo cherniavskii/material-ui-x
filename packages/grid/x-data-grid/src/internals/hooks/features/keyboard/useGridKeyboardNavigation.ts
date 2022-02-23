@@ -20,6 +20,7 @@ import { useCurrentPageRows } from '../../utils/useCurrentPageRows';
  * @requires useGridDimensions (method) - can be after
  * @requires useGridFocus (method) - can be after
  * @requires useGridScroll (method) - can be after
+ * @requires useGridColumnSpanning (method) - can be after
  */
 export const useGridKeyboardNavigation = (
   apiRef: React.MutableRefObject<GridApiCommunity>,

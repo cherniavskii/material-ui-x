@@ -11,7 +11,8 @@ import { GridStateColDef } from '../../../models/colDef/gridColDef';
 import { GridApiCommunity } from '../../../models/api/gridApiCommunity';
 
 /**
- * TODO
+ * @requires useGridColumns (method, event)
+ * @requires useGridParamsApi (method)
  */
 export const useGridColumnSpanning = (apiRef: React.MutableRefObject<GridApiCommon>) => {
   const lookup = React.useRef<Record<GridRowId, Record<GridColumnIndex, GridCellMeta>>>({});

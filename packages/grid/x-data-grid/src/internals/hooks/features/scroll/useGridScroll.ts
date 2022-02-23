@@ -38,6 +38,8 @@ function scrollIntoView(dimensions) {
  * @requires useGridColumns (state)
  * @requires useGridRows (state)
  * @requires useGridDensity (state)
+ * @requires useGridFilter (state)
+ * @requires useGridColumnSpanning (method)
  */
 export const useGridScroll = (
   apiRef: React.MutableRefObject<GridApiCommunity>,
