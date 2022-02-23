@@ -627,4 +627,23 @@ describe('<DataGrid /> - Column Spanning', () => {
     expect(() => getCell(2, 1)).to.not.throw();
     expect(() => getCell(2, 2)).to.throw(/not found/);
   });
+
+  it('should add `aria-colspan` attribute when `colSpan` > 1', () => {
+    render(
+      <div style={{ width: 500, height: 300 }}>
+        <DataGrid
+          {...baselineProps}
+          columns={[
+            { field: 'brand', colSpan: 2 },
+            { field: 'category' },
+            { field: 'price' },
+            { field: 'rating' },
+          ]}
+        />
+      </div>,
+    );
+
+    expect(getCell(0, 0).getAttribute('aria-colspan')).to.equal('2');
+    expect(getCell(0, 2).getAttribute('aria-colspan')).to.equal(null);
+  });
 });

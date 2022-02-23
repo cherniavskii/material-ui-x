@@ -82,6 +82,7 @@ export const useGridCellsColSpan = (apiRef: React.MutableRefObject<GridApiCommon
             });
           }
         }
+        dataColSpanAttributes['aria-colspan'] = String(colSpan);
       }
 
       setCellMeta(rowId, columnIndex, {
