@@ -10,7 +10,7 @@ import { GridCellParams } from '../../../models/params/gridCellParams';
 import { GridStateColDef } from '../../../models/colDef/gridColDef';
 import { GridApiCommunity } from '../../../models/api/gridApiCommunity';
 
-export const useGridCellsColSpan = (apiRef: React.MutableRefObject<GridApiCommon>) => {
+export const useGridColumnSpanning = (apiRef: React.MutableRefObject<GridApiCommon>) => {
   const lookup = React.useRef<Record<GridRowId, Record<GridColumnIndex, GridCellMeta>>>({});
 
   const setCellMeta = React.useCallback(
@@ -25,7 +25,7 @@ export const useGridCellsColSpan = (apiRef: React.MutableRefObject<GridApiCommon
     [],
   );
 
-  const getCellMeta = React.useCallback<GridCellsColSpan['unstable_getCellSize']>(
+  const getCellMeta = React.useCallback<GridCellsColSpan['unstable_getCellMeta']>(
     (rowId, columnIndex) => {
       return lookup.current[rowId]?.[columnIndex];
     },
@@ -101,7 +101,7 @@ export const useGridCellsColSpan = (apiRef: React.MutableRefObject<GridApiCommon
     [apiRef, setCellMeta],
   );
   // Calculate `colSpan` for each cell in the row
-  const calculateRowColSpan = React.useCallback<GridCellsColSpan['unstable_calculateRowColSpan']>(
+  const calculateColSpan = React.useCallback<GridCellsColSpan['unstable_calculateColSpan']>(
     ({ rowId, minFirstColumn, maxLastColumn }) => {
       const visibleColumns = apiRef.current.getVisibleColumns();
       const renderedColumns = visibleColumns.slice(minFirstColumn, maxLastColumn);
@@ -123,8 +123,8 @@ export const useGridCellsColSpan = (apiRef: React.MutableRefObject<GridApiCommon
   );
 
   const cellsMetaApi: GridCellsColSpan = {
-    unstable_getCellSize: getCellMeta,
-    unstable_calculateRowColSpan: calculateRowColSpan,
+    unstable_getCellMeta: getCellMeta,
+    unstable_calculateColSpan: calculateColSpan,
   };
 
   useGridApiMethod(apiRef, cellsMetaApi, 'GridCellsMetaApi');

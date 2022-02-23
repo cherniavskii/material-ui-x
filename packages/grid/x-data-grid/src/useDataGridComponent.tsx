@@ -25,7 +25,7 @@ import { useGridEvents } from './internals/hooks/features/events/useGridEvents';
 import { useGridDimensions } from './internals/hooks/features/dimensions/useGridDimensions';
 import { useGridRowsMeta } from './internals/hooks/features/rows/useGridRowsMeta';
 import { useGridStatePersistence } from './internals/hooks/features/statePersistence/useGridStatePersistence';
-import { useGridCellsColSpan } from './internals/hooks/features/cells/useGridCellsColSpan';
+import { useGridColumnSpanning } from './internals/hooks/features/cells/useGridColumnSpanning';
 
 export const useDataGridComponent = (props: DataGridProcessedProps) => {
   const apiRef = useGridInitialization<GridApiCommunity>(undefined, props);
@@ -51,7 +51,7 @@ export const useDataGridComponent = (props: DataGridProcessedProps) => {
   useGridDimensions(apiRef, props);
   useGridEvents(apiRef, props);
   useGridStatePersistence(apiRef);
-  useGridCellsColSpan(apiRef);
+  useGridColumnSpanning(apiRef);
 
   return apiRef;
 };

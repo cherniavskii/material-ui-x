@@ -23,7 +23,7 @@ import {
   unstable_useGridEvents as useGridEvents,
   unstable_useGridDimensions as useGridDimensions,
   unstable_useGridStatePersistence as useGridStatePersistence,
-  unstable_useGridCellsColSpan as useGridCellsColSpan,
+  unstable_useGridColumnSpanning as useGridColumnSpanning,
 } from '@mui/x-data-grid';
 
 import { GridApiPro } from './internals/models/gridApiPro';
@@ -74,7 +74,7 @@ export const useDataGridProComponent = (
   useGridDimensions(apiRef, props);
   useGridEvents(apiRef, props);
   useGridStatePersistence(apiRef);
-  useGridCellsColSpan(apiRef);
+  useGridColumnSpanning(apiRef);
 
   return apiRef;
 };

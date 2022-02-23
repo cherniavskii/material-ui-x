@@ -8,11 +8,11 @@ import { GridRowId } from '../gridRows';
  */
 export interface GridCellsColSpan {
   // TODO
-  unstable_getCellSize: (
+  unstable_getCellMeta: (
     rowId: GridRowId,
     columnIndex: GridColumnIndex,
   ) => GridCellMeta | undefined;
-  unstable_calculateRowColSpan: (params: {
+  unstable_calculateColSpan: (params: {
     rowId: GridRowId;
     minFirstColumn: number;
     maxLastColumn: number;

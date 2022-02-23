@@ -296,11 +296,7 @@ export const useGridVirtualScroller = (props: UseGridVirtualScrollerProps) => {
         isSelected = true;
       }
 
-      apiRef.current.unstable_calculateRowColSpan({
-        rowId: id,
-        minFirstColumn,
-        maxLastColumn,
-      });
+      apiRef.current.unstable_calculateColSpan({ rowId: id, minFirstColumn, maxLastColumn });
 
       rows.push(
         <rootProps.components.Row
