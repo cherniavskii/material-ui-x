@@ -1,8 +1,8 @@
 import * as React from 'react';
-import { createRenderer, fireEvent, waitFor } from '@mui/monorepo/test/utils';
+import { createRenderer, fireEvent, waitFor, screen, within } from '@mui/monorepo/test/utils';
 import { expect } from 'chai';
 import { DataGrid, gridClasses } from '@mui/x-data-grid';
-import { getCell, getActiveCell } from 'test/utils/helperFn';
+import { getCell, getActiveCell, getColumnHeaderCell } from 'test/utils/helperFn';
 
 function fireClickEvent(cell: HTMLElement) {
   fireEvent.mouseUp(cell);
@@ -10,7 +10,7 @@ function fireClickEvent(cell: HTMLElement) {
 }
 
 describe('<DataGrid /> - Column Spanning', () => {
-  const { render } = createRenderer({ clock: 'fake' });
+  const { render, clock } = createRenderer({ clock: 'fake' });
 
   const baselineProps = {
     rows: [
@@ -371,7 +371,7 @@ describe('<DataGrid /> - Column Spanning', () => {
       fireClickEvent(getCell(0, 3));
 
       expect(() => getCell(0, 3)).to.not.throw();
-      // should be hidden because of first column colSpan
+      // should not be rendered because of first column colSpan
       expect(() => getCell(0, 2)).to.throw(/not found/);
     });
 
@@ -581,5 +581,50 @@ describe('<DataGrid /> - Column Spanning', () => {
     expect(() => getCell(1, 1)).to.throw(/not found/);
     expect(() => getCell(1, 2)).to.not.throw();
     expect(() => getCell(1, 3)).to.not.throw();
+  });
+
+  it('should apply `colSpan` properly after hiding a column', () => {
+    render(
+      <div style={{ width: 500, height: 300 }}>
+        <DataGrid
+          {...baselineProps}
+          columns={[
+            {
+              field: 'brand',
+              colSpan: ({ row }) => (row.brand === 'Nike' ? 2 : 1),
+            },
+            {
+              field: 'category',
+              colSpan: ({ row }) => (row.brand === 'Adidas' ? 2 : 1),
+            },
+            {
+              field: 'price',
+              colSpan: ({ row }) => (row.brand === 'Puma' ? 2 : 1),
+            },
+            { field: 'rating' },
+          ]}
+        />
+      </div>,
+    );
+
+    // hide `category` column
+    fireEvent.click(within(getColumnHeaderCell(1)).getByLabelText('Menu'));
+    fireEvent.click(screen.getByRole('menuitem', { name: 'Hide' }));
+    clock.runToLast();
+
+    // Nike row
+    expect(() => getCell(0, 0)).to.not.throw();
+    expect(() => getCell(0, 1)).to.throw(/not found/);
+    expect(() => getCell(0, 2)).to.not.throw();
+
+    // Adidas row
+    expect(() => getCell(1, 0)).to.not.throw();
+    expect(() => getCell(1, 1)).to.not.throw();
+    expect(() => getCell(1, 2)).to.not.throw();
+
+    // Puma row
+    expect(() => getCell(2, 0)).to.not.throw();
+    expect(() => getCell(2, 1)).to.not.throw();
+    expect(() => getCell(2, 2)).to.throw(/not found/);
   });
 });
