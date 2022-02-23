@@ -1,9 +1,9 @@
 import React from 'react';
 import { GridApiCommon } from '../../../models/api/gridApiCommon';
 import { useGridApiMethod } from '../../utils/useGridApiMethod';
-import { GridColumnIndex, GridCellMeta } from '../../../models/gridCellsColSpan';
+import { GridColumnIndex, GridCellMeta } from '../../../models/gridColumnSpanning';
 import { GridRowId } from '../../../models/gridRows';
-import { GridCellsColSpan } from '../../../models/api/gridCellsColSpan';
+import { GridColumnSpanning } from '../../../models/api/gridColumnSpanning';
 import { useGridApiEventHandler } from '../../utils/useGridApiEventHandler';
 import { GridEvents } from '../../../models/events/gridEvents';
 import { GridCellParams } from '../../../models/params/gridCellParams';
@@ -28,7 +28,7 @@ export const useGridColumnSpanning = (apiRef: React.MutableRefObject<GridApiComm
     [],
   );
 
-  const getCellMeta = React.useCallback<GridCellsColSpan['unstable_getCellMeta']>(
+  const getCellMeta = React.useCallback<GridColumnSpanning['unstable_getCellMeta']>(
     (rowId, columnIndex) => {
       return lookup.current[rowId]?.[columnIndex];
     },
@@ -104,7 +104,7 @@ export const useGridColumnSpanning = (apiRef: React.MutableRefObject<GridApiComm
     [apiRef, setCellMeta],
   );
   // Calculate `colSpan` for each cell in the row
-  const calculateColSpan = React.useCallback<GridCellsColSpan['unstable_calculateColSpan']>(
+  const calculateColSpan = React.useCallback<GridColumnSpanning['unstable_calculateColSpan']>(
     ({ rowId, minFirstColumn, maxLastColumn }) => {
       const visibleColumns = apiRef.current.getVisibleColumns();
       const renderedColumns = visibleColumns.slice(minFirstColumn, maxLastColumn);
@@ -125,12 +125,12 @@ export const useGridColumnSpanning = (apiRef: React.MutableRefObject<GridApiComm
     [apiRef, calculateCellColSpan],
   );
 
-  const cellsMetaApi: GridCellsColSpan = {
+  const cellsMetaApi: GridColumnSpanning = {
     unstable_getCellMeta: getCellMeta,
     unstable_calculateColSpan: calculateColSpan,
   };
 
-  useGridApiMethod(apiRef, cellsMetaApi, 'GridCellsMetaApi');
+  useGridApiMethod(apiRef, cellsMetaApi, 'GridColumnSpanningAPI');
 
   const handleColumnReorderChange = React.useCallback(() => {
     // `colSpan` needs to be recalculated after column reordering
