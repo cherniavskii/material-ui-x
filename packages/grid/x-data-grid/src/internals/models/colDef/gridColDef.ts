@@ -222,7 +222,10 @@ export interface GridColDef<Api extends GridApiCommon = GridApiCommunity> {
    * @default false
    */
   disableExport?: boolean;
-
+  /**
+   * Number of columns a grid cell should span.
+   * @default 1
+   */
   colSpan?: number | ((GridCellParams) => number | undefined);
 }
 
