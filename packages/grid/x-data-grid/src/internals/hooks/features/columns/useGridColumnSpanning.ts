@@ -66,8 +66,7 @@ export const useGridColumnSpanning = (apiRef: React.MutableRefObject<GridApiComm
         for (let j = 1; j < colSpan; j += 1) {
           const nextColumnIndex = columnIndex + j;
           const nextColumn = visibleColumns[nextColumnIndex];
-          // TODO: consider using column field insteead of index. Is there a lookup?
-          // `renderedColumns` does not include pinned columns.
+          // Use `renderedColumns` here to calculate colSpan for pinned and non-pinned columns in isolation.
           if (renderedColumns.includes(nextColumn)) {
             width += nextColumn.computedWidth;
 
