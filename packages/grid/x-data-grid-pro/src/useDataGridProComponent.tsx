@@ -52,6 +52,7 @@ export const useDataGridProComponent = (
   useGridColumns(apiRef, props);
   useGridRows(apiRef, props);
   useGridParamsApi(apiRef);
+  useGridColumnSpanning(apiRef);
   useGridDetailPanelCache(apiRef, props);
   useGridEditing(apiRef, props);
   useGridFocus(apiRef, props);
@@ -74,7 +75,6 @@ export const useDataGridProComponent = (
   useGridDimensions(apiRef, props);
   useGridEvents(apiRef, props);
   useGridStatePersistence(apiRef);
-  useGridColumnSpanning(apiRef);
 
   return apiRef;
 };

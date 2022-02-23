@@ -34,6 +34,7 @@ export const useDataGridComponent = (props: DataGridProcessedProps) => {
   useGridDensity(apiRef, props);
   useGridRows(apiRef, props);
   useGridParamsApi(apiRef);
+  useGridColumnSpanning(apiRef);
   useGridEditing(apiRef, props);
   useGridFocus(apiRef, props);
   useGridSorting(apiRef, props);
@@ -51,7 +52,6 @@ export const useDataGridComponent = (props: DataGridProcessedProps) => {
   useGridDimensions(apiRef, props);
   useGridEvents(apiRef, props);
   useGridStatePersistence(apiRef);
-  useGridColumnSpanning(apiRef);
 
   return apiRef;
 };
