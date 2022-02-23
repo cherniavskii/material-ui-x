@@ -4,6 +4,8 @@ import { expect } from 'chai';
 import { DataGridPro, GridApi, useGridApiRef } from '@mui/x-data-grid-pro';
 import { getActiveCell, getCell } from 'test/utils/helperFn';
 
+const isJSDOM = /jsdom/.test(window.navigator.userAgent);
+
 function fireClickEvent(cell: HTMLElement) {
   fireEvent.mouseUp(cell);
   fireEvent.click(cell);
@@ -38,7 +40,12 @@ describe('<DataGridPro /> - Column Spanning', () => {
     ],
   };
 
-  it('should not apply `colSpan` in pinned columns section if there is only one column there', async () => {
+  it('should not apply `colSpan` in pinned columns section if there is only one column there', function test() {
+    if (isJSDOM) {
+      // Need layouting
+      this.skip();
+    }
+
     render(
       <div style={{ width: 500, height: 300 }}>
         <DataGridPro
@@ -59,7 +66,7 @@ describe('<DataGridPro /> - Column Spanning', () => {
     expect(() => getCell(0, 2)).to.not.throw();
   });
 
-  it('should apply `colSpan` inside pinned columns section', async () => {
+  it('should apply `colSpan` inside pinned columns section', () => {
     render(
       <div style={{ width: 500, height: 300 }}>
         <DataGridPro
@@ -116,7 +123,12 @@ describe('<DataGridPro /> - Column Spanning', () => {
     });
   });
 
-  it('should recalculate cells after column reordering', () => {
+  it('should recalculate cells after column reordering', function test() {
+    if (isJSDOM) {
+      // Need layouting
+      this.skip();
+    }
+
     let apiRef: React.MutableRefObject<GridApi>;
 
     const Test = () => {

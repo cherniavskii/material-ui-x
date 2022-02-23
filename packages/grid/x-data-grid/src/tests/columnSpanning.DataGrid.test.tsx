@@ -4,6 +4,8 @@ import { expect } from 'chai';
 import { DataGrid, gridClasses } from '@mui/x-data-grid';
 import { getCell, getActiveCell, getColumnHeaderCell } from 'test/utils/helperFn';
 
+const isJSDOM = /jsdom/.test(window.navigator.userAgent);
+
 function fireClickEvent(cell: HTMLElement) {
   fireEvent.mouseUp(cell);
   fireEvent.click(cell);
@@ -38,7 +40,12 @@ describe('<DataGrid /> - Column Spanning', () => {
     ],
   };
 
-  it('should support `colSpan` number signature', async () => {
+  it('should support `colSpan` number signature', function test() {
+    if (isJSDOM) {
+      // Need layouting
+      this.skip();
+    }
+
     render(
       <div style={{ width: 500, height: 300 }}>
         <DataGrid
@@ -58,7 +65,12 @@ describe('<DataGrid /> - Column Spanning', () => {
     expect(() => getCell(0, 3)).to.not.throw();
   });
 
-  it('should support `colSpan` function signature', async () => {
+  it('should support `colSpan` function signature', function test() {
+    if (isJSDOM) {
+      // Need layouting
+      this.skip();
+    }
+
     render(
       <div style={{ width: 500, height: 300 }}>
         <DataGrid
@@ -122,6 +134,13 @@ describe('<DataGrid /> - Column Spanning', () => {
 
   /* eslint-disable material-ui/disallow-active-element-as-key-event-target */
   describe('key navigation', () => {
+    beforeEach(function beforeEachHook() {
+      if (isJSDOM) {
+        // Need layouting
+        this.skip();
+      }
+    });
+
     const columns = [
       {
         field: 'brand',
@@ -283,7 +302,7 @@ describe('<DataGrid /> - Column Spanning', () => {
       });
     });
 
-    it('should work with row virtualization', async () => {
+    it('should work with row virtualization', () => {
       const rows = [
         {
           id: 0,
@@ -496,7 +515,12 @@ describe('<DataGrid /> - Column Spanning', () => {
     });
   });
 
-  it('should work with filtering', () => {
+  it('should work with filtering', function test() {
+    if (isJSDOM) {
+      // Need layouting
+      this.skip();
+    }
+
     render(
       <div style={{ width: 500, height: 300 }}>
         <DataGrid
