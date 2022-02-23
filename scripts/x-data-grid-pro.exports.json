@@ -490,6 +490,7 @@
   { "name": "unstable_useGridColumnHeaders", "kind": "ExportSpecifier" },
   { "name": "unstable_useGridColumnMenu", "kind": "ExportSpecifier" },
   { "name": "unstable_useGridColumns", "kind": "ExportSpecifier" },
+  { "name": "unstable_useGridColumnSpanning", "kind": "ExportSpecifier" },
   { "name": "unstable_useGridCsvExport", "kind": "ExportSpecifier" },
   { "name": "unstable_useGridDensity", "kind": "ExportSpecifier" },
   { "name": "unstable_useGridDimensions", "kind": "ExportSpecifier" },
