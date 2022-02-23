@@ -42,7 +42,7 @@ export { useGridScroll as unstable_useGridScroll } from './internals/hooks/featu
 export { useGridEvents as unstable_useGridEvents } from './internals/hooks/features/events/useGridEvents';
 export { useGridDimensions as unstable_useGridDimensions } from './internals/hooks/features/dimensions/useGridDimensions';
 export { useGridStatePersistence as unstable_useGridStatePersistence } from './internals/hooks/features/statePersistence/useGridStatePersistence';
-export { useGridColumnSpanning as unstable_useGridColumnSpanning } from './internals/hooks/features/cells/useGridColumnSpanning';
+export { useGridColumnSpanning as unstable_useGridColumnSpanning } from './internals/hooks/features/columns/useGridColumnSpanning';
 
 export { isNavigationKey as unstable_isNavigationKey } from './internals/utils/keyboardUtils';
 export {
