@@ -60,3 +60,19 @@ export const gridDataRowIdsSelector = createSelector(
   gridRowsStateSelector,
   (rows) => rows.dataRowIds,
 );
+
+/**
+ * @ignore - do not document.
+ */
+export const gridAdditionalRowGroupsSelector = createSelector(
+  gridRowsStateSelector,
+  (rows) => rows?.additionalRowGroups,
+);
+
+/**
+ * @ignore - do not document.
+ */
+export const gridPinnedRowsSelector = createSelector(
+  gridAdditionalRowGroupsSelector,
+  (additionalRowGroups) => additionalRowGroups?.pinnedRows,
+);

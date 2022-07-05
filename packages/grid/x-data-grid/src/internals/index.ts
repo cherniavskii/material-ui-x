@@ -64,6 +64,11 @@ export type {
 export { getTreeNodeDescendants, buildRootGroup } from '../hooks/features/rows/gridRowsUtils';
 export { useGridRowsMeta, rowsMetaStateInitializer } from '../hooks/features/rows/useGridRowsMeta';
 export { useGridParamsApi } from '../hooks/features/rows/useGridParamsApi';
+export { getRowIdFromRowModel } from '../hooks/features/rows/gridRowsUtils';
+export {
+  gridAdditionalRowGroupsSelector,
+  gridPinnedRowsSelector,
+} from '../hooks/features/rows/gridRowsSelector';
 export {
   useGridSelection,
   selectionStateInitializer,

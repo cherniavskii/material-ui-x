@@ -247,20 +247,8 @@
     "supportsApiRef": true
   },
   {
-    "name": "gridRowCountSelector",
-    "returnType": "number",
-    "description": "",
-    "supportsApiRef": true
-  },
-  {
     "name": "gridRowGroupingModelSelector",
     "returnType": "GridRowGroupingModel",
-    "description": "",
-    "supportsApiRef": true
-  },
-  {
-    "name": "gridRowGroupingNameSelector",
-    "returnType": "string",
     "description": "",
     "supportsApiRef": true
   },
@@ -313,12 +301,6 @@
     "supportsApiRef": false
   },
   {
-    "name": "gridRowsStateSelector",
-    "returnType": "GridRowsState",
-    "description": "",
-    "supportsApiRef": false
-  },
-  {
     "name": "gridSelectionStateSelector",
     "returnType": "GridSelectionModel",
     "description": "",
@@ -362,12 +344,6 @@
     "returnType": "GridTabIndexState",
     "description": "",
     "supportsApiRef": false
-  },
-  {
-    "name": "gridTopLevelRowCountSelector",
-    "returnType": "number",
-    "description": "",
-    "supportsApiRef": true
   },
   {
     "name": "gridVisibleColumnDefinitionsSelector",
