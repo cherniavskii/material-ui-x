@@ -279,7 +279,7 @@ export const useGridSorting = (
       Object.values(rowTree).forEach((rowNode) => {
         if (rowNode.position === 'footer') {
           footerRowIds.push(rowNode.id);
-        } else {
+        } else if (!rowNode.isPinned) {
           bodyRows.push(rowNode);
         }
       });
