@@ -101,6 +101,7 @@ export const useGridAggregationPreProcessors = (
             groupingParams,
             aggregationRules,
             getAggregationPosition: props.getAggregationPosition,
+            apiRef,
           });
         }
       }

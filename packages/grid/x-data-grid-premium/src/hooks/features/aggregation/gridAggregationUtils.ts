@@ -2,6 +2,7 @@ import * as React from 'react';
 import { capitalize } from '@mui/material';
 import { GridColDef, GridRowId, GridRowTreeNodeConfig } from '@mui/x-data-grid-pro';
 import {
+  addPinnedRow,
   GridColumnRawLookup,
   GridRowTreeCreationValue,
   isDeepEqual,
@@ -113,10 +114,12 @@ export const addFooterRows = ({
   groupingParams,
   aggregationRules,
   getAggregationPosition,
+  apiRef,
 }: {
   groupingParams: GridRowTreeCreationValue;
   aggregationRules: GridAggregationRules;
   getAggregationPosition: DataGridPremiumProcessedProps['getAggregationPosition'];
+  apiRef: React.MutableRefObject<GridApiPremium>;
 }) => {
   if (Object.keys(aggregationRules).length === 0) {
     return groupingParams;
@@ -155,7 +158,22 @@ export const addFooterRows = ({
     }
   };
 
-  addGroupFooter(null);
+  let newGroupingParams = {
+    ...groupingParams,
+    tree,
+    idRowsLookup,
+    ids,
+  };
+
+  if (getAggregationPosition(null) === 'footer') {
+    newGroupingParams = addPinnedRow({
+      groupingParams: newGroupingParams,
+      rowModel: {},
+      rowId: getAggregationFooterRowIdFromGroupId(null),
+      position: 'bottom',
+      apiRef,
+    });
+  }
 
   // If the tree is flat, we don't need to loop through the rows
   if (groupingParams.treeDepth > 1) {
@@ -171,9 +189,7 @@ export const addFooterRows = ({
 
   return {
     ...groupingParams,
-    ids,
-    idRowsLookup,
-    tree,
+    ...newGroupingParams,
   };
 };
 
