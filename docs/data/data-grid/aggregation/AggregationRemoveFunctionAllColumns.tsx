@@ -34,26 +34,26 @@ export default function AggregationRemoveFunctionAllColumns() {
   const data = useMovieData();
 
   return (
-    <DataGridPremium
-      // The 2 following props are here to avoid scroll in the demo while we don't have pinned rows
-      rows={data.rows.slice(0, 3)}
-      autoHeight
-      columns={COLUMNS}
-      aggregationFunctions={Object.fromEntries(
-        Object.entries(GRID_AGGREGATION_FUNCTIONS).filter(
-          ([name]) => name !== 'sum',
-        ),
-      )}
-      initialState={{
-        aggregation: {
-          model: {
-            gross: 'max',
+    <div style={{ height: 400, width: '100%' }}>
+      <DataGridPremium
+        rows={data.rows}
+        columns={COLUMNS}
+        aggregationFunctions={Object.fromEntries(
+          Object.entries(GRID_AGGREGATION_FUNCTIONS).filter(
+            ([name]) => name !== 'sum',
+          ),
+        )}
+        initialState={{
+          aggregation: {
+            model: {
+              gross: 'max',
+            },
           },
-        },
-      }}
-      experimentalFeatures={{
-        aggregation: true,
-      }}
-    />
+        }}
+        experimentalFeatures={{
+          aggregation: true,
+        }}
+      />
+    </div>
   );
 }

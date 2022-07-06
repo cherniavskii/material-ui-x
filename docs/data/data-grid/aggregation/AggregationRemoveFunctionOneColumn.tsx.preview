@@ -4,7 +4,8 @@
   initialState={{
     aggregation: {
       model: {
-        gross: 'sum',
+        year: 'max',
+        gross: 'max',
       },
     },
   }}
