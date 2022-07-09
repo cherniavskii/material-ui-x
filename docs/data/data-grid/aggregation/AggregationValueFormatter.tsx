@@ -1,7 +1,7 @@
 import * as React from 'react';
 import {
   DataGridPremium,
-  GRID_AGGREGATION_FUNCTIONS,
+  PRIVATE_GRID_AGGREGATION_FUNCTIONS,
   GridAggregationFunction,
   GridColDef,
 } from '@mui/x-data-grid-premium';
@@ -59,19 +59,19 @@ export default function AggregationValueFormatter() {
       <DataGridPremium
         rows={data.rows}
         columns={COLUMNS}
-        aggregationFunctions={{
-          ...GRID_AGGREGATION_FUNCTIONS,
+        private_aggregationFunctions={{
+          ...PRIVATE_GRID_AGGREGATION_FUNCTIONS,
           firstAlphabetical: firstAlphabeticalAggregation,
         }}
         initialState={{
-          aggregation: {
+          private_aggregation: {
             model: {
               director: 'firstAlphabetical',
             },
           },
         }}
         experimentalFeatures={{
-          aggregation: true,
+          private_aggregation: true,
         }}
       />
     </div>

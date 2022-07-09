@@ -38,10 +38,12 @@ export default function AggregationControlled() {
       <DataGridPremium
         rows={data.rows}
         columns={COLUMNS}
-        aggregationModel={aggregationModel}
-        onAggregationModelChange={(newModel) => setAggregationModel(newModel)}
+        private_aggregationModel={aggregationModel}
+        private_onAggregationModelChange={(newModel) =>
+          setAggregationModel(newModel)
+        }
         experimentalFeatures={{
-          aggregation: true,
+          private_aggregation: true,
         }}
       />
     </div>

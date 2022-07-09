@@ -35,14 +35,14 @@ export default function AggregationInitialState() {
         rows={data.rows}
         columns={COLUMNS}
         initialState={{
-          aggregation: {
+          private_aggregation: {
             model: {
               gross: 'sum',
             },
           },
         }}
         experimentalFeatures={{
-          aggregation: true,
+          private_aggregation: true,
         }}
       />
     </div>

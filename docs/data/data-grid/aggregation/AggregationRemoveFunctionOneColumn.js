@@ -28,7 +28,7 @@ const COLUMNS = [
     field: 'year',
     headerName: 'Year',
     type: 'number',
-    availableAggregationFunctions: ['max', 'min'],
+    private_availableAggregationFunctions: ['max', 'min'],
   },
 ];
 
@@ -41,7 +41,7 @@ export default function AggregationRemoveFunctionOneColumn() {
         rows={data.rows}
         columns={COLUMNS}
         initialState={{
-          aggregation: {
+          private_aggregation: {
             model: {
               year: 'max',
               gross: 'max',
@@ -49,7 +49,7 @@ export default function AggregationRemoveFunctionOneColumn() {
           },
         }}
         experimentalFeatures={{
-          aggregation: true,
+          private_aggregation: true,
         }}
       />
     </div>
