@@ -223,8 +223,8 @@ const DataGridProVirtualScroller = React.forwardRef<
   const [leftPinnedColumns, rightPinnedColumns] = filterColumns(pinnedColumns, visibleColumnFields);
 
   const pinnedRows = useGridSelector(apiRef, gridPinnedRowsSelector);
-  const topPinnedRowsData = pinnedRows?.top || [];
-  const bottomPinnedRowsData = pinnedRows?.bottom || [];
+  const topPinnedRowsData = React.useMemo(() => pinnedRows?.top || [], [pinnedRows?.top]);
+  const bottomPinnedRowsData = React.useMemo(() => pinnedRows?.bottom || [], [pinnedRows?.bottom]);
 
   const ownerState = {
     classes: rootProps.classes,
@@ -327,15 +327,23 @@ const DataGridProVirtualScroller = React.forwardRef<
 
   const topPinnedRows = getRows({ renderContext, rows: topPinnedRowsData });
 
-  const topPinnedRowsHeight = topPinnedRowsData.reduce((acc, value) => {
-    acc += apiRef.current.unstable_getRowHeight(value.id);
-    return acc;
-  }, 0);
+  const topPinnedRowsHeight = React.useMemo(
+    () =>
+      topPinnedRowsData.reduce((acc, value) => {
+        acc += apiRef.current.unstable_getRowHeight(value.id);
+        return acc;
+      }, 0),
+    [apiRef, topPinnedRowsData],
+  );
 
-  const bottomPinnedRowsHeight = bottomPinnedRowsData.reduce((acc, value) => {
-    acc += apiRef.current.unstable_getRowHeight(value.id);
-    return acc;
-  }, 0);
+  const bottomPinnedRowsHeight = React.useMemo(
+    () =>
+      bottomPinnedRowsData.reduce((acc, value) => {
+        acc += apiRef.current.unstable_getRowHeight(value.id);
+        return acc;
+      }, 0),
+    [apiRef, bottomPinnedRowsData],
+  );
 
   const mainRows = getRows({
     renderContext,
