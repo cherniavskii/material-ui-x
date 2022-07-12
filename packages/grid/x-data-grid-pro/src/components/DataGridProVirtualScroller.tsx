@@ -327,23 +327,15 @@ const DataGridProVirtualScroller = React.forwardRef<
 
   const topPinnedRows = getRows({ renderContext, rows: topPinnedRowsData });
 
-  const topPinnedRowsHeight = React.useMemo(
-    () =>
-      topPinnedRowsData.reduce((acc, value) => {
-        acc += apiRef.current.unstable_getRowHeight(value.id);
-        return acc;
-      }, 0),
-    [apiRef, topPinnedRowsData],
-  );
+  const topPinnedRowsHeight = topPinnedRowsData.reduce((acc, value) => {
+    acc += apiRef.current.unstable_getRowHeight(value.id);
+    return acc;
+  }, 0);
 
-  const bottomPinnedRowsHeight = React.useMemo(
-    () =>
-      bottomPinnedRowsData.reduce((acc, value) => {
-        acc += apiRef.current.unstable_getRowHeight(value.id);
-        return acc;
-      }, 0),
-    [apiRef, bottomPinnedRowsData],
-  );
+  const bottomPinnedRowsHeight = bottomPinnedRowsData.reduce((acc, value) => {
+    acc += apiRef.current.unstable_getRowHeight(value.id);
+    return acc;
+  }, 0);
 
   const mainRows = getRows({
     renderContext,
