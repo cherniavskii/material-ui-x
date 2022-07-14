@@ -22,7 +22,6 @@ import { gridRowsMetaSelector } from '../rows/gridRowsMetaSelector';
 import { GridRowId, GridRowModel } from '../../../models/gridRows';
 import { getFirstNonSpannedColumnToRender } from '../columns/gridColumnsUtils';
 import { gridRowsLookupSelector } from '../rows/gridRowsSelector';
-import { gridClasses } from '../../../constants/gridClasses';
 
 // Uses binary search to avoid looping through all possible positions
 export function binarySearch(
@@ -258,15 +257,6 @@ export const useGridVirtualScroller = (props: UseGridVirtualScrollerProps) => {
       const top = gridRowsMetaSelector(apiRef.current.state).positions[firstRowToRender];
       const left = gridColumnPositionsSelector(apiRef)[firstColumnToRender]; // Call directly the selector because it might be outdated when this method is called
       renderZoneRef.current!.style.transform = `translate3d(${left}px, ${top}px, 0px)`;
-
-      // update pinned rows render zones
-      apiRef.current
-        .rootElementRef!.current!.querySelectorAll<HTMLElement>(
-          `.${gridClasses.pinnedRowsRenderZone}`,
-        )
-        .forEach((element) => {
-          element.style.transform = `translate3d(${left}px, 0px, 0px)`;
-        });
 
       if (typeof onRenderZonePositioning === 'function') {
         onRenderZonePositioning({ top, left });
