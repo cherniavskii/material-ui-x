@@ -12,6 +12,7 @@ import {
 import { gridPageSizeSelector } from './gridPaginationSelector';
 import { gridDensityRowHeightSelector } from '../density';
 import { GridPipeProcessor, useGridRegisterPipeProcessor } from '../../core/pipeProcessing';
+import { calculatePinnedRowsHeight } from '../rows/gridRowsUtils';
 
 export const defaultPageSize = (autoPageSize: boolean) => (autoPageSize ? 0 : 100);
 
@@ -125,8 +126,11 @@ export const useGridPageSize = (
       return;
     }
 
+    const pinnedRowsHeight = calculatePinnedRowsHeight(apiRef);
+
     const maximumPageSizeWithoutScrollBar = Math.floor(
-      dimensions.viewportInnerSize.height / rowHeight,
+      (dimensions.viewportInnerSize.height - pinnedRowsHeight.top - pinnedRowsHeight.bottom) /
+        rowHeight,
     );
     apiRef.current.setPageSize(maximumPageSizeWithoutScrollBar);
   }, [apiRef, props.autoPageSize, rowHeight]);

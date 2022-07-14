@@ -21,6 +21,8 @@ import {
   GridRowIdToIdLookup,
   GridRowsPartialUpdateAction,
 } from './gridRowsInterfaces';
+import { GridRowsInternalCache, GridRowsState } from './gridRowsState';
+import { gridPinnedRowsSelector } from './gridRowsSelector';
 
 export const GRID_ROOT_GROUP_ID: GridRowId = `auto-generated-group-node-root`;
 
@@ -342,3 +344,23 @@ export const updateCacheWithNewRows = ({
     loadingPropBeforePartialUpdates: previousCache.loadingPropBeforePartialUpdates,
   };
 };
+
+export function calculatePinnedRowsHeight(apiRef: React.MutableRefObject<GridApiCommunity>) {
+  const pinnedRows = gridPinnedRowsSelector(apiRef);
+  const topPinnedRowsHeight =
+    pinnedRows?.top?.reduce((acc, value) => {
+      acc += apiRef.current.unstable_getRowHeight(value.id);
+      return acc;
+    }, 0) || 0;
+
+  const bottomPinnedRowsHeight =
+    pinnedRows?.bottom?.reduce((acc, value) => {
+      acc += apiRef.current.unstable_getRowHeight(value.id);
+      return acc;
+    }, 0) || 0;
+
+  return {
+    top: topPinnedRowsHeight,
+    bottom: bottomPinnedRowsHeight,
+  };
+}
