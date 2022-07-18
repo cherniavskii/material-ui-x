@@ -174,6 +174,21 @@ export const addFooterRows = (params: AddFooterRowsParams) => {
     tree,
     treeDepths,
   };
+
+  if (getAggregationPosition(null) === 'footer') {
+    newGroupingParams = addPinnedRow({
+      groupingParams: newGroupingParams,
+      rowModel: {},
+      rowId: private_getAggregationFooterRowIdFromGroupId(null),
+      position: 'bottom',
+      apiRef,
+    });
+  }
+
+  return {
+    ...groupingParams,
+    ...newGroupingParams,
+  };
 };
 
 /**
