@@ -267,6 +267,7 @@ export const useGridSorting = (
       const sortedChildren = params.sortRowList
         ? params.sortRowList(rootGroupNode.children.map((childId) => rowTree[childId]))
         : [...rootGroupNode.children];
+      // pinned rows?
       if (rootGroupNode.footerId != null) {
         sortedChildren.push(rootGroupNode.footerId);
       }
