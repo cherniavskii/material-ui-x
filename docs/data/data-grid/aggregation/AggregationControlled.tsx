@@ -44,7 +44,9 @@ export default function AggregationControlled() {
         rows={data.rows}
         columns={COLUMNS}
         private_aggregationModel={aggregationModel}
-        private_onAggregationModelChange={(newModel) => setAggregationModel(newModel)}
+        private_onAggregationModelChange={(newModel) =>
+          setAggregationModel(newModel)
+        }
         experimentalFeatures={{
           private_aggregation: true,
         }}
