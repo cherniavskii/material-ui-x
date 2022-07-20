@@ -98,11 +98,12 @@ export interface GridGroupNode extends GridTreeBasicNode {
    * The id of the group containing this node (null for the root group).
    */
   parent: GridRowId | null;
-  /**
-   * If `true`, this row is pinned.
-   * @default false
-   */
-  isPinned?: boolean;
+}
+
+export interface GridPinnedNode extends GridTreeBasicNode {
+  type: 'pinned';
+  position: 'top' | 'bottom';
+  parent: null;
 }
 
 export type GridChildrenFromPathLookup = {
@@ -119,7 +120,7 @@ export interface GridFooterNode extends GridTreeBasicNode {
   parent: GridRowId;
 }
 
-export type GridTreeNode = GridLeafNode | GridGroupNode | GridFooterNode;
+export type GridTreeNode = GridLeafNode | GridGroupNode | GridFooterNode | GridPinnedNode;
 
 export type GridRowTreeConfig = Record<GridRowId, GridTreeNode>;
 

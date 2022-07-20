@@ -1,4 +1,9 @@
-import { GridRowId, GridRowTreeConfig, GridValidRowModel } from '../../../models/gridRows';
+import {
+  GridRowId,
+  GridRowTreeConfig,
+  GridValidRowModel,
+  GridRowEntry,
+} from '../../../models/gridRows';
 import type { DataGridProcessedProps } from '../../../models/props/DataGridProps';
 
 export interface GridRowsInternalCache {
@@ -58,6 +63,14 @@ export interface GridRowsState {
   totalTopLevelRowCount: number;
   dataRowIdToModelLookup: GridRowIdToModelLookup;
   dataRowIdToIdLookup: GridRowIdToIdLookup;
+  additionalRowGroups?: {
+    pinnedRows?: GridPinnedRowsState;
+  };
+}
+
+export interface GridPinnedRowsState {
+  top?: GridRowEntry[];
+  bottom?: GridRowEntry[];
 }
 
 export interface GridRowTreeCreationParams {
@@ -86,7 +99,10 @@ export type GridRowTreeCreationValue = Pick<
   updatedGroupsManager?: GridRowTreeUpdatedGroupsManager;
 };
 
-export type GridHydrateRowsValue = Pick<GridRowsState, 'tree' | 'treeDepths'>;
+export type GridHydrateRowsValue = Pick<
+  GridRowsState,
+  'tree' | 'treeDepths' | 'additionalRowGroups'
+>;
 
 export type GridRowsPartialUpdateAction = 'insert' | 'modify' | 'remove';
 

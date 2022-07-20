@@ -21,7 +21,6 @@ import {
   GridRowIdToIdLookup,
   GridRowsPartialUpdateAction,
 } from './gridRowsInterfaces';
-import { GridRowsInternalCache, GridRowsState } from './gridRowsState';
 import { gridPinnedRowsSelector } from './gridRowsSelector';
 
 export const GRID_ROOT_GROUP_ID: GridRowId = `auto-generated-group-node-root`;

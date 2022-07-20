@@ -204,14 +204,16 @@ export const createGroupingColDefForOneGroupingCriteria = ({
         return '';
       }
 
-      // Render current grouping criteria groups
-      if (params.rowNode.groupingField === groupingCriteria) {
-        return (
-          <GridGroupingCriteriaCell
-            {...(params as GridRenderCellParams<any, any, any, GridGroupNode>)}
-            hideDescendantCount={hideDescendantCount}
-          />
-        );
+      if (params.rowNode.type === 'group') {
+        // Render current grouping criteria groups
+        if (params.rowNode.groupingField === groupingCriteria) {
+          return (
+            <GridGroupingCriteriaCell
+              {...(params as GridRenderCellParams<any, any, any, GridGroupNode>)}
+              hideDescendantCount={hideDescendantCount}
+            />
+          );
+        }
       }
 
       return '';
@@ -229,8 +231,10 @@ export const createGroupingColDefForOneGroupingCriteria = ({
         return undefined;
       }
 
-      if (params.rowNode.groupingField === groupingCriteria) {
-        return params.rowNode.groupingKey;
+      if (params.rowNode.type === 'group') {
+        if (params.rowNode.groupingField === groupingCriteria) {
+          return params.rowNode.groupingKey;
+        }
       }
 
       return undefined;
@@ -351,7 +355,11 @@ export const createGroupingColDefForAllGroupingCriteria = ({
         return undefined;
       }
 
-      return params.rowNode.groupingKey;
+      if (params.rowNode.type === 'group') {
+        return params.rowNode.groupingKey;
+      }
+
+      return undefined;
     },
   };
 

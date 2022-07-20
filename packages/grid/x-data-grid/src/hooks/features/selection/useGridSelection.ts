@@ -157,7 +157,7 @@ export const useGridSelection = (
       }
 
       if (apiRef.current.getRowNode(id)?.type === 'footer') {
-      // if (rowNode?.position === 'footer' || rowNode?.isPinned) {
+        // if (rowNode?.position === 'footer' || rowNode?.isPinned) {
         return false;
       }
 
@@ -351,7 +351,7 @@ export const useGridSelection = (
         }
       }
 
-      if (params.rowNode.isPinned) {
+      if (params.rowNode.type === 'pinned') {
         return;
       }
 

@@ -18,7 +18,7 @@ export const rowPinningStateInitializer: GridStateInitializer<
     bottom: props.pinnedRows?.bottom || [],
   };
 
-  return {
+  const newState = {
     ...state,
     rows: {
       ...state.rows,
@@ -28,6 +28,8 @@ export const rowPinningStateInitializer: GridStateInitializer<
       },
     },
   };
+
+  return newState;
 };
 
 export const useGridRowPinning = (

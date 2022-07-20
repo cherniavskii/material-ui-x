@@ -91,7 +91,7 @@ export const useGridRowReorder = (
         return;
       }
 
-      if (apiRef.current.getRowNode(params.id)?.isPinned) {
+      if (apiRef.current.getRowNode(params.id)?.type === 'pinned') {
         return;
       }
 
