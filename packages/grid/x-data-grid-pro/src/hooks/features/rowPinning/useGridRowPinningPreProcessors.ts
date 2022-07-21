@@ -56,7 +56,7 @@ export function addPinnedRow({
           ...(previousPinnedRows[position] || []),
           {
             id: rowId,
-            rowModel,
+            model: rowModel,
           },
         ],
       },
