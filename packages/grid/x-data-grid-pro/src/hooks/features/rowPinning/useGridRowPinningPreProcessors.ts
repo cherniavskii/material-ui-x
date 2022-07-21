@@ -14,20 +14,20 @@ import { insertNodeInTree } from '../../../utils/tree/utils';
 type GridPinnedRowPosition = keyof GridPinnedRowsProp;
 
 export function addPinnedRow({
-  groupingParams,
+  params,
   rowModel,
   rowId,
   position,
   apiRef,
 }: {
-  groupingParams: GridHydrateRowsValue;
+  params: GridHydrateRowsValue;
   rowModel: GridRowModel;
   rowId: GridRowId;
   position: GridPinnedRowPosition;
   apiRef: React.MutableRefObject<GridApiPro>;
 }) {
-  const tree = { ...groupingParams.tree };
-  const treeDepths = { ...groupingParams.treeDepths };
+  const tree = { ...params.tree };
+  const treeDepths = { ...params.treeDepths };
 
   // TODO: warn if id is already present in `props.rows`
   const treeNode: GridPinnedNode = {
@@ -43,13 +43,13 @@ export function addPinnedRow({
   apiRef.current.unstable_caches.rows.dataRowIdToModelLookup[rowId] = { ...rowModel };
   apiRef.current.unstable_caches.rows.dataRowIdToIdLookup[rowId] = rowId;
 
-  const previousPinnedRows = groupingParams.additionalRowGroups?.pinnedRows || {};
+  const previousPinnedRows = params.additionalRowGroups?.pinnedRows || {};
 
   return {
-    ...groupingParams,
+    ...params,
     tree,
     additionalRowGroups: {
-      ...groupingParams.additionalRowGroups,
+      ...params.additionalRowGroups,
       pinnedRows: {
         ...previousPinnedRows,
         [position]: [
@@ -74,7 +74,7 @@ export const useGridRowPinningPreProcessors = (
       const pinnedRowsTop = pinnedRows?.top || [];
       const pinnedRowsBottom = pinnedRows?.bottom || [];
 
-      let newGroupingParams = {
+      let newParams = {
         ...value,
         additionalRowGroups: {
           ...value.additionalRowGroups,
@@ -85,8 +85,8 @@ export const useGridRowPinningPreProcessors = (
 
       pinnedRowsTop.forEach((row) => {
         const rowId = getRowIdFromRowModel(row, props.getRowId);
-        newGroupingParams = addPinnedRow({
-          groupingParams: newGroupingParams,
+        newParams = addPinnedRow({
+          params: newParams,
           rowModel: row,
           rowId,
           position: 'top',
@@ -95,8 +95,8 @@ export const useGridRowPinningPreProcessors = (
       });
       pinnedRowsBottom.forEach((row) => {
         const rowId = getRowIdFromRowModel(row, props.getRowId);
-        newGroupingParams = addPinnedRow({
-          groupingParams: newGroupingParams,
+        newParams = addPinnedRow({
+          params: newParams,
           rowModel: row,
           rowId,
           position: 'bottom',
@@ -104,7 +104,7 @@ export const useGridRowPinningPreProcessors = (
         });
       });
 
-      return newGroupingParams;
+      return newParams;
     },
     [apiRef, props.getRowId],
   );

@@ -122,10 +122,12 @@ export const getRowsStateFromCache = ({
   loadingProp,
   previousTree,
   previousTreeDepths,
+  previousAdditionalRowGroups,
 }: Pick<GridRowTreeCreationParams, 'previousTree' | 'previousTreeDepths'> & {
   apiRef: React.MutableRefObject<GridApiCommunity>;
   rowCountProp: number | undefined;
   loadingProp: boolean | undefined;
+  previousAdditionalRowGroups: GridRowsState['additionalRowGroups'];
 }): GridRowsState => {
   const cache = apiRef.current.unstable_caches.rows;
 
@@ -144,10 +146,14 @@ export const getRowsStateFromCache = ({
   });
 
   // 2. Apply the "hydrateRows" pipe-processing on the tree / treeDepths.
-  const { tree, treeDepths } = apiRef.current.unstable_applyPipeProcessors('hydrateRows', {
-    tree: unProcessedTree,
-    treeDepths: unProcessedTreeDepths,
-  });
+  const { tree, treeDepths, additionalRowGroups } = apiRef.current.unstable_applyPipeProcessors(
+    'hydrateRows',
+    {
+      tree: unProcessedTree,
+      treeDepths: unProcessedTreeDepths,
+      additionalRowGroups: previousAdditionalRowGroups,
+    },
+  );
 
   // 3. Reset the cache updates
   apiRef.current.unstable_caches.rows.updates = {
@@ -170,6 +176,7 @@ export const getRowsStateFromCache = ({
     loading: loadingProp,
     dataRowIdToIdLookup: cache.dataRowIdToIdLookup,
     dataRowIdToModelLookup: cache.dataRowIdToModelLookup,
+    additionalRowGroups,
   };
 };
 

@@ -13,6 +13,7 @@ import {
   gridRowGroupingNameSelector,
   gridRowTreeDepthsSelector,
   gridDataRowIdsSelector,
+  gridAdditionalRowGroupsSelector,
 } from './gridRowsSelector';
 import { GridSignature, useGridApiEventHandler } from '../../utils/useGridApiEventHandler';
 import { GridStateInitializer } from '../../utils/useGridInitializeState';
@@ -48,6 +49,7 @@ export const rowsStateInitializer: GridStateInitializer<
       loadingProp: props.loading,
       previousTree: null,
       previousTreeDepths: null,
+      previousAdditionalRowGroups: {},
     }),
   };
 };
@@ -118,6 +120,10 @@ export const useGridRows = (
             loadingProp: props.loading,
             previousTree: gridRowTreeSelector(apiRef),
             previousTreeDepths: gridRowTreeDepthsSelector(apiRef),
+            previousAdditionalRowGroups: gridAdditionalRowGroupsSelector(
+              state,
+              apiRef.current.instanceId,
+            ),
           }),
         }));
         apiRef.current.publishEvent('rowsSet');
@@ -408,6 +414,7 @@ export const useGridRows = (
       const response = apiRef.current.unstable_applyPipeProcessors('hydrateRows', {
         tree: gridRowTreeSelector(state, apiRef.current.instanceId),
         treeDepths: gridRowTreeDepthsSelector(state, apiRef.current.instanceId),
+        additionalRowGroups: gridAdditionalRowGroupsSelector(state, apiRef.current.instanceId),
       });
 
       return {
