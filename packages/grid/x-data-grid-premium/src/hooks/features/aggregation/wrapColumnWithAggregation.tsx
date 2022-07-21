@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { GridColDef, GridRowId } from '@mui/x-data-grid-pro';
+import { GridColDef, GridRowId, GRID_ROOT_GROUP_ID } from '@mui/x-data-grid-pro';
 import { GridApiPremium } from '../../../models/gridApiPremium';
 import {
   GridAggregationCellMeta,
@@ -200,8 +200,17 @@ export const wrapColumnWithAggregationValue = ({
     }
 
     // TODO: Add custom root id
-    const groupId =
-      cellAggregationPosition === 'inline' ? id : apiRef.current.getRowNode(id)!.parent ?? '';
+    let groupId: GridRowId;
+    if (cellAggregationPosition === 'inline') {
+      groupId = id;
+    } else {
+      const rowNode = apiRef.current.getRowNode(id)!;
+      if (rowNode.type === 'pinned') {
+        groupId = GRID_ROOT_GROUP_ID;
+      } else {
+        groupId = rowNode.parent ?? '';
+      }
+    }
 
     const aggregationResult = gridAggregationLookupSelector(apiRef)[groupId]?.[field];
     if (!aggregationResult || aggregationResult.position !== cellAggregationPosition) {

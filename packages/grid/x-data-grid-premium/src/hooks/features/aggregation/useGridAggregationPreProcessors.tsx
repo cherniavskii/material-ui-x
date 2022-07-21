@@ -97,10 +97,10 @@ export const useGridAggregationPreProcessors = (
 
       apiRef.current.unstable_caches.aggregation.rulesOnLastRowHydration = aggregationRules;
 
-      return addFooterRows({
-        ...value,
+      return addFooterRows(value, {
         getAggregationPosition: props.private_getAggregationPosition,
         hasAggregationRule,
+        apiRef,
       });
     },
     [
