@@ -944,4 +944,31 @@ describe('<DataGridPro /> - Row pinning', () => {
     expect(csvRows[0]).to.equal('0');
     expect(csvRows[csvRows.length - 1]).to.equal('1');
   });
+
+  it('should include pinned rows count in footer', () => {
+    const rowCount = 20;
+
+    const TestCase = () => {
+      const data = getData(rowCount, 1);
+      const [pinnedRow0, pinnedRow1, ...rows] = data.rows;
+
+      return (
+        <div style={{ width: 302, height: 300 }}>
+          <DataGridPro
+            {...data}
+            rows={rows}
+            pinnedRows={{
+              top: [pinnedRow0],
+              bottom: [pinnedRow1],
+            }}
+            experimentalFeatures={{ rowPinning: true }}
+          />
+        </div>
+      );
+    };
+
+    render(<TestCase />);
+
+    expect(screen.getByText(`Total Rows: ${rowCount}`)).not.to.equal(null);
+  });
 });
