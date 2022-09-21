@@ -13,7 +13,7 @@ import { useGridStateInitialization } from './useGridStateInitialization';
  * Initialize the technical pieces of the DataGrid (logger, state, ...) that any DataGrid implementation needs
  */
 export const useGridInitialization = <Api extends GridApiCommon>(
-  inputApiRef: React.MutableRefObject<Api> | undefined,
+  inputApiRef: React.Ref<Api> | undefined,
   props: Pick<DataGridProcessedProps, 'signature' | 'logger' | 'logLevel' | 'error' | 'localeText'>,
 ) => {
   const apiRef = useGridApiInitialization(inputApiRef, props);

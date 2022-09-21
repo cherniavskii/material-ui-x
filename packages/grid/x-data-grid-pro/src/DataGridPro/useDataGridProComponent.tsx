@@ -79,7 +79,7 @@ import {
 import { useGridRowPinningPreProcessors } from '../hooks/features/rowPinning/useGridRowPinningPreProcessors';
 
 export const useDataGridProComponent = (
-  inputApiRef: React.MutableRefObject<GridApiPro> | undefined,
+  inputApiRef: React.Ref<GridApiPro> | undefined,
   props: DataGridProProcessedProps,
 ) => {
   const apiRef = useGridInitialization(inputApiRef, props);

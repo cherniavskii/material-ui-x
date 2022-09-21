@@ -12,7 +12,7 @@ const isSyntheticEvent = (event: any): event is React.SyntheticEvent => {
 let globalId = 0;
 
 export function useGridApiInitialization<Api extends GridApiCommon>(
-  inputApiRef: React.MutableRefObject<Api> | undefined,
+  inputApiRef: React.Ref<Api> | undefined,
   props: Pick<DataGridProcessedProps, 'signature'>,
 ): React.MutableRefObject<Api> {
   const apiRef = React.useRef() as React.MutableRefObject<Api>;

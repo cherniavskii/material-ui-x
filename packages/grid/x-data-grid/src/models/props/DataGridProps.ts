@@ -351,7 +351,7 @@ export interface DataGridPropsWithoutDefaultValue<R extends GridValidRowModel = 
    * TODO: Remove `@internal` when opening `apiRef` to Community plan
    * @ignore - do not document.
    */
-  apiRef?: React.MutableRefObject<GridApiCommunity>;
+  apiRef?: React.Ref<GridApiCommunity>;
   /**
    * Signal to the underlying logic what version of the public component API
    * of the data grid is exposed [[GridSignature]].
