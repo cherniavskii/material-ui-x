@@ -29,7 +29,7 @@
     "size:snapshot": "node --max-old-space-size=2048 ./scripts/sizeSnapshot/create",
     "size:why": "yarn size:snapshot --analyze --accurateBundles",
     "t": "node test/cli.js",
-    "test": "lerna run test --parallel",
+    "test": "turbo run test --parallel",
     "test:coverage": "cross-env NODE_ENV=test BABEL_ENV=coverage nyc mocha 'packages/**/*.test.{js,ts,tsx}' --exclude '**/node_modules/**' && nyc report -r lcovonly",
     "test:coverage:html": "cross-env NODE_ENV=test BABEL_ENV=coverage nyc mocha 'packages/**/*.test.{js,ts,tsx}' --exclude '**/node_modules/**' && nyc report --reporter=html",
     "test:karma": "cross-env NODE_ENV=test karma start test/karma.conf.js",
@@ -58,7 +58,7 @@
     "install:codesandbox": "PLAYWRIGHT_SKIP_BROWSER_DOWNLOAD=1 yarn install --ignore-engines",
     "release:changelog": "node scripts/releaseChangelog",
     "release:version": "lerna version --exact --no-changelog --no-push --no-git-tag-version",
-    "release:build": "lerna run --parallel --scope \"@mui/*\" build",
+    "release:build": "turbo run --parallel --filter=@mui/* build",
     "release:publish": "lerna publish from-package --dist-tag next --contents build",
     "release:publish:dry-run": "lerna publish from-package --dist-tag next --contents build --registry=\"http://localhost:4873/\"",
     "release:tag": "node scripts/releaseTag"
