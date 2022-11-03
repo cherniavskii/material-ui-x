@@ -16,6 +16,10 @@
     "test:unit": {
       "dependsOn": [],
       "outputs": []
+    },
+    "test:karma": {
+      "dependsOn": [],
+      "outputs": []
     }
   }
 }

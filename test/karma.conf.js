@@ -5,6 +5,16 @@ const CI = Boolean(process.env.CI);
 
 process.env.CHROME_BIN = playwright.chromium.executablePath();
 
+const testFolder = (process.argv.find((arg) => arg.startsWith('--path=')) || '').replace(
+  '--path=',
+  '',
+);
+
+if (testFolder) {
+  // eslint-disable-next-line no-console
+  console.log(`Running tests from folder "${testFolder}"`);
+}
+
 // Karma configuration
 module.exports = function setKarmaConfig(config) {
   const baseConfig = {
@@ -57,6 +67,7 @@ module.exports = function setKarmaConfig(config) {
             NODE_ENV: '"test"',
             CI: JSON.stringify(process.env.CI),
             KARMA: 'true',
+            TEST_FOLDER: JSON.stringify(testFolder),
           },
         }),
       ],
@@ -98,7 +109,7 @@ module.exports = function setKarmaConfig(config) {
         ],
       },
     },
-    singleRun: CI,
+    singleRun: CI || !!testFolder,
   };
 
   config.set(baseConfig);

@@ -18,5 +18,9 @@ afterEach(function beforeEachHook() {
   });
 });
 
-const packagesContext = require.context('../packages', true, /\.test\.tsx$/);
+const packagesContext = require.context(
+  `../${process.env.TEST_FOLDER || 'packages'}`,
+  true,
+  /\.test\.tsx$/,
+);
 packagesContext.keys().forEach(packagesContext);
