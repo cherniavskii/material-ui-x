@@ -15,8 +15,7 @@
     },
     "test:unit": {
       "dependsOn": [],
-      "outputs": [],
-      "inputs": [".mocharc.js", "test/utils/**"]
+      "outputs": []
     }
   }
 }

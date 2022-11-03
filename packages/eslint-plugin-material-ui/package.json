@@ -10,7 +10,7 @@
     "@typescript-eslint/parser": "^5.39.0"
   },
   "scripts": {
-    "test:unit": "cross-env NODE_ENV=test node --expose_gc ../../node_modules/.bin/mocha --config ../../.mocharc.js"
+    "test:unit": "cross-env NODE_ENV=test node --expose_gc ../../node_modules/.bin/mocha '**/*.test.{js,ts,tsx}' --config ../../.mocharc.js"
   },
   "repository": {
     "type": "git",
