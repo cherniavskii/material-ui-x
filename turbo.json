@@ -12,6 +12,11 @@
     "build": {
       "dependsOn": ["^build"],
       "outputs": ["build/**"]
+    },
+    "test:unit": {
+      "dependsOn": [],
+      "outputs": [],
+      "inputs": [".mocharc.js", "test/utils/**"]
     }
   }
 }
