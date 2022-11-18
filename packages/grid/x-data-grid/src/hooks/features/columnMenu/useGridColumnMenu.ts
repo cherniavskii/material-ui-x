@@ -5,6 +5,7 @@ import { gridColumnMenuSelector } from './columnMenuSelector';
 import { GridColumnMenuApi, GridEventListener } from '../../../models';
 import { GridStateInitializer } from '../../utils/useGridInitializeState';
 import { gridClasses } from '../../../constants/gridClasses';
+import { DataGridProcessedProps } from '../../../models/props/DataGridProps';
 
 export const columnMenuStateInitializer: GridStateInitializer = (state) => ({
   ...state,
@@ -17,6 +18,7 @@ export const columnMenuStateInitializer: GridStateInitializer = (state) => ({
  */
 export const useGridColumnMenu = (
   apiRef: React.MutableRefObject<GridPrivateApiCommunity>,
+  props: Pick<DataGridProcessedProps, 'disableColumnMenu'>,
 ): void => {
   const logger = useGridLogger(apiRef, 'useGridColumnMenu');
 
@@ -67,6 +69,9 @@ export const useGridColumnMenu = (
 
   const toggleColumnMenu = React.useCallback<GridColumnMenuApi['toggleColumnMenu']>(
     (field) => {
+      if (props.disableColumnMenu) {
+        return;
+      }
       logger.debug('Toggle Column Menu');
       const columnMenu = gridColumnMenuSelector(apiRef.current.state);
       if (!columnMenu.open || columnMenu.field !== field) {
@@ -75,7 +80,7 @@ export const useGridColumnMenu = (
         hideColumnMenu();
       }
     },
-    [apiRef, logger, showColumnMenu, hideColumnMenu],
+    [apiRef, logger, showColumnMenu, hideColumnMenu, props.disableColumnMenu],
   );
 
   const columnMenuApi: GridColumnMenuApi = {

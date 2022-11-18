@@ -88,7 +88,7 @@ export const useDataGridComponent = (props: DataGridProcessedProps) => {
   useGridPagination(privateApiRef, props);
   useGridRowsMeta(privateApiRef, props);
   useGridScroll(privateApiRef, props);
-  useGridColumnMenu(privateApiRef);
+  useGridColumnMenu(privateApiRef, props);
   useGridCsvExport(privateApiRef);
   useGridPrintExport(privateApiRef, props);
   useGridClipboard(privateApiRef);

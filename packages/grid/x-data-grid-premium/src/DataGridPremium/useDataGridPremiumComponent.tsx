@@ -148,7 +148,7 @@ export const useDataGridPremiumComponent = (
   useGridRowReorder(privateApiRef, props);
   useGridScroll(privateApiRef, props);
   useGridInfiniteLoader(privateApiRef, props);
-  useGridColumnMenu(privateApiRef);
+  useGridColumnMenu(privateApiRef, props);
   useGridCsvExport(privateApiRef);
   useGridPrintExport(privateApiRef, props);
   useGridExcelExport(privateApiRef);
