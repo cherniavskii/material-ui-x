@@ -26,7 +26,7 @@ function GridFilterInputDate(props: GridFilterInputDateProps) {
 
       setIsApplying(true);
       filterTimeout.current = setTimeout(() => {
-        applyValue({ ...item, value: new Date(event.target.valueAsNumber) });
+        applyValue({ ...item, value: new Date(event.target.value) });
         setIsApplying(false);
       }, SUBMIT_FILTER_DATE_STROKE_TIME);
     },
@@ -41,12 +41,17 @@ function GridFilterInputDate(props: GridFilterInputDateProps) {
 
   React.useEffect(() => {
     const itemValue = item.value ?? '';
-    let value = '';
+    let value = itemValue;
     if (itemValue instanceof Date) {
+      const dateCopy = new Date(itemValue);
+      // The date picker expects the date to be in the local timezone.
+      // But .toISOString() converts it to UTC with zero offset.
+      // So we need to remove the timezone offset from the date.
+      dateCopy.setMinutes(dateCopy.getMinutes() - dateCopy.getTimezoneOffset());
       if (type === 'date') {
-        value = itemValue.toISOString().substring(0, 10);
+        value = dateCopy.toISOString().substring(0, 10);
       } else if (type === 'datetime-local') {
-        value = itemValue.toISOString().substring(0, 19);
+        value = dateCopy.toISOString().substring(0, 19);
       }
     }
     setFilterValueState(value);
