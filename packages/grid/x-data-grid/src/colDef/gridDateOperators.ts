@@ -14,7 +14,9 @@ function buildApplyFilterFn(
   }
 
   const date = new Date(filterItem.value);
-  if (!showTime) {
+  if (showTime) {
+    date.setSeconds(0, 0);
+  } else {
     date.setHours(0, 0, 0, 0);
   }
   const time = date.getTime();

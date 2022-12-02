@@ -14,7 +14,7 @@ export const SUBMIT_FILTER_DATE_STROKE_TIME = 500;
 function GridFilterInputDate(props: GridFilterInputDateProps) {
   const { item, applyValue, type, apiRef, focusElementRef, InputProps, ...other } = props;
   const filterTimeout = React.useRef<any>();
-  const [filterValueState, setFilterValueState] = React.useState(item.value ?? '');
+  const [filterValueState, setFilterValueState] = React.useState('');
   const [applying, setIsApplying] = React.useState(false);
   const id = useId();
   const rootProps = useGridRootProps();
@@ -26,7 +26,7 @@ function GridFilterInputDate(props: GridFilterInputDateProps) {
 
       setIsApplying(true);
       filterTimeout.current = setTimeout(() => {
-        applyValue({ ...item, value: event.target.valueAsDate });
+        applyValue({ ...item, value: new Date(event.target.valueAsNumber) });
         setIsApplying(false);
       }, SUBMIT_FILTER_DATE_STROKE_TIME);
     },
@@ -43,10 +43,14 @@ function GridFilterInputDate(props: GridFilterInputDateProps) {
     const itemValue = item.value ?? '';
     let value = '';
     if (itemValue instanceof Date) {
-      value = itemValue.toISOString().substring(0, 10);
+      if (type === 'date') {
+        value = itemValue.toISOString().substring(0, 10);
+      } else if (type === 'datetime-local') {
+        value = itemValue.toISOString().substring(0, 16);
+      }
     }
     setFilterValueState(value);
-  }, [item.value]);
+  }, [item.value, type]);
 
   return (
     <rootProps.components.BaseTextField
