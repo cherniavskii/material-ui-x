@@ -581,6 +581,10 @@ describe('<DataGrid /> - Filter', () => {
         '1/1/2001, 12:00:00 AM',
         '1/1/2001, 8:30:00 AM',
       ]);
+      expect(getRows({ operator: 'is', value: new Date('2001-01-01') })).to.deep.equal([
+        '1/1/2001, 12:00:00 AM',
+        '1/1/2001, 8:30:00 AM',
+      ]);
       expect(getRows({ operator: 'is', value: undefined })).to.deep.equal(ALL_ROWS);
       expect(getRows({ operator: 'is', value: '' })).to.deep.equal(ALL_ROWS);
     });
@@ -591,12 +595,19 @@ describe('<DataGrid /> - Filter', () => {
         '1/1/2000, 12:00:00 AM',
         '1/1/2002, 12:00:00 AM',
       ]);
+      expect(getRows({ operator: 'not', value: new Date('2001-01-01') })).to.deep.equal([
+        '1/1/2000, 12:00:00 AM',
+        '1/1/2002, 12:00:00 AM',
+      ]);
       expect(getRows({ operator: 'not', value: undefined })).to.deep.equal(ALL_ROWS);
       expect(getRows({ operator: 'not', value: '' })).to.deep.equal(ALL_ROWS);
     });
 
     it('should filter with operator "before"', () => {
       expect(getRows({ operator: 'before', value: '2001-01-01' })).to.deep.equal([
+        '1/1/2000, 12:00:00 AM',
+      ]);
+      expect(getRows({ operator: 'before', value: new Date('2001-01-01') })).to.deep.equal([
         '1/1/2000, 12:00:00 AM',
       ]);
       expect(getRows({ operator: 'before', value: undefined })).to.deep.equal(ALL_ROWS);
@@ -609,6 +620,11 @@ describe('<DataGrid /> - Filter', () => {
         '1/1/2001, 12:00:00 AM',
         '1/1/2001, 8:30:00 AM',
       ]);
+      expect(getRows({ operator: 'onOrBefore', value: new Date('2001-01-01') })).to.deep.equal([
+        '1/1/2000, 12:00:00 AM',
+        '1/1/2001, 12:00:00 AM',
+        '1/1/2001, 8:30:00 AM',
+      ]);
       expect(getRows({ operator: 'onOrBefore', value: undefined })).to.deep.equal(ALL_ROWS);
       expect(getRows({ operator: 'onOrBefore', value: '' })).to.deep.equal(ALL_ROWS);
     });
@@ -617,12 +633,20 @@ describe('<DataGrid /> - Filter', () => {
       expect(getRows({ operator: 'after', value: '2001-01-01' })).to.deep.equal([
         '1/1/2002, 12:00:00 AM',
       ]);
+      expect(getRows({ operator: 'after', value: new Date('2001-01-01') })).to.deep.equal([
+        '1/1/2002, 12:00:00 AM',
+      ]);
       expect(getRows({ operator: 'after', value: undefined })).to.deep.equal(ALL_ROWS);
       expect(getRows({ operator: 'after', value: '' })).to.deep.equal(ALL_ROWS);
     });
 
     it('should filter with operator "onOrAfter"', () => {
       expect(getRows({ operator: 'onOrAfter', value: '2001-01-01' })).to.deep.equal([
+        '1/1/2001, 12:00:00 AM',
+        '1/1/2001, 8:30:00 AM',
+        '1/1/2002, 12:00:00 AM',
+      ]);
+      expect(getRows({ operator: 'onOrAfter', value: new Date('2001-01-01') })).to.deep.equal([
         '1/1/2001, 12:00:00 AM',
         '1/1/2001, 8:30:00 AM',
         '1/1/2002, 12:00:00 AM',
@@ -722,6 +746,9 @@ describe('<DataGrid /> - Filter', () => {
       expect(getRows({ operator: 'is', value: '2001-01-01T07:30' })).to.deep.equal([
         '1/1/2001, 7:30:00 AM',
       ]);
+      expect(getRows({ operator: 'is', value: new Date('2001-01-01T07:30') })).to.deep.equal([
+        '1/1/2001, 7:30:00 AM',
+      ]);
       expect(getRows({ operator: 'is', value: undefined })).to.deep.equal(ALL_ROWS);
       expect(getRows({ operator: 'is', value: '' })).to.deep.equal(ALL_ROWS);
     });
@@ -729,6 +756,10 @@ describe('<DataGrid /> - Filter', () => {
     it('should filter with operator "not"', () => {
       // TODO: Should this filter return the invalid dates like for the numeric filters ?
       expect(getRows({ operator: 'not', value: '2001-01-01T07:30' })).to.deep.equal([
+        '1/1/2001, 6:30:00 AM',
+        '1/1/2001, 8:30:00 AM',
+      ]);
+      expect(getRows({ operator: 'not', value: new Date('2001-01-01T07:30') })).to.deep.equal([
         '1/1/2001, 6:30:00 AM',
         '1/1/2001, 8:30:00 AM',
       ]);
@@ -740,6 +771,9 @@ describe('<DataGrid /> - Filter', () => {
       expect(getRows({ operator: 'before', value: '2001-01-01T07:30' })).to.deep.equal([
         '1/1/2001, 6:30:00 AM',
       ]);
+      expect(getRows({ operator: 'before', value: new Date('2001-01-01T07:30') })).to.deep.equal([
+        '1/1/2001, 6:30:00 AM',
+      ]);
       expect(getRows({ operator: 'before', value: undefined })).to.deep.equal(ALL_ROWS);
       expect(getRows({ operator: 'before', value: '' })).to.deep.equal(ALL_ROWS);
     });
@@ -749,12 +783,18 @@ describe('<DataGrid /> - Filter', () => {
         '1/1/2001, 6:30:00 AM',
         '1/1/2001, 7:30:00 AM',
       ]);
+      expect(
+        getRows({ operator: 'onOrBefore', value: new Date('2001-01-01T07:30') }),
+      ).to.deep.equal(['1/1/2001, 6:30:00 AM', '1/1/2001, 7:30:00 AM']);
       expect(getRows({ operator: 'onOrBefore', value: undefined })).to.deep.equal(ALL_ROWS);
       expect(getRows({ operator: 'onOrBefore', value: '' })).to.deep.equal(ALL_ROWS);
     });
 
     it('should filter with operator "after"', () => {
       expect(getRows({ operator: 'after', value: '2001-01-01T07:30' })).to.deep.equal([
+        '1/1/2001, 8:30:00 AM',
+      ]);
+      expect(getRows({ operator: 'after', value: new Date('2001-01-01T07:30') })).to.deep.equal([
         '1/1/2001, 8:30:00 AM',
       ]);
       expect(getRows({ operator: 'after', value: undefined })).to.deep.equal(ALL_ROWS);
@@ -766,6 +806,9 @@ describe('<DataGrid /> - Filter', () => {
         '1/1/2001, 7:30:00 AM',
         '1/1/2001, 8:30:00 AM',
       ]);
+      expect(getRows({ operator: 'onOrAfter', value: new Date('2001-01-01T07:30') })).to.deep.equal(
+        ['1/1/2001, 7:30:00 AM', '1/1/2001, 8:30:00 AM'],
+      );
       expect(getRows({ operator: 'onOrAfter', value: undefined })).to.deep.equal(ALL_ROWS);
       expect(getRows({ operator: 'onOrAfter', value: '' })).to.deep.equal(ALL_ROWS);
     });
