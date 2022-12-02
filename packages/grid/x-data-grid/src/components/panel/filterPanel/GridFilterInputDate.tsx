@@ -46,7 +46,7 @@ function GridFilterInputDate(props: GridFilterInputDateProps) {
       if (type === 'date') {
         value = itemValue.toISOString().substring(0, 10);
       } else if (type === 'datetime-local') {
-        value = itemValue.toISOString().substring(0, 16);
+        value = itemValue.toISOString().substring(0, 19);
       }
     }
     setFilterValueState(value);
