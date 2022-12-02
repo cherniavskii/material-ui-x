@@ -33,13 +33,12 @@ function buildApplyFilterFn(
 
     // Make a copy of the date to not reset the hours in the original object
     const dateCopy = value instanceof Date ? new Date(valueAsDate) : valueAsDate;
-    const timeToCompare = dateCopy.setHours(
-      showTime ? valueAsDate.getHours() : 0,
-      showTime ? valueAsDate.getMinutes() : 0,
-      0,
-      0,
-    );
-    return compareFn(timeToCompare, time);
+    if (showTime) {
+      dateCopy.setSeconds(0, 0);
+    } else {
+      dateCopy.setHours(0, 0, 0, 0);
+    }
+    return compareFn(dateCopy.getTime(), time);
   };
 }
 
