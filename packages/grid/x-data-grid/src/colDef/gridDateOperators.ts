@@ -3,9 +3,6 @@ import { GridFilterItem } from '../models/gridFilterItem';
 import { GridFilterOperator } from '../models/gridFilterOperator';
 import { GridCellParams } from '../models/params/gridCellParams';
 
-const dateRegex = /(\d+)-(\d+)-(\d+)/;
-const dateTimeRegex = /(\d+)-(\d+)-(\d+)T(\d+):(\d+)/;
-
 function buildApplyFilterFn(
   filterItem: GridFilterItem,
   compareFn: (value1: number, value2: number) => boolean,
@@ -16,12 +13,11 @@ function buildApplyFilterFn(
     return null;
   }
 
-  const [year, month, day, hour, minute] = filterItem.value
-    .match(showTime ? dateTimeRegex : dateRegex)!
-    .slice(1)
-    .map(Number);
-
-  const time = new Date(year, month - 1, day, hour || 0, minute || 0).getTime();
+  const date = new Date(filterItem.value);
+  if (!showTime) {
+    date.setHours(0, 0, 0, 0);
+  }
+  const time = date.getTime();
 
   return ({ value }: GridCellParams<string | number | Date, any, any>): boolean => {
     if (!value) {

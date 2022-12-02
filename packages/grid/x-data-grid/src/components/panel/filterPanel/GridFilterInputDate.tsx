@@ -20,15 +20,13 @@ function GridFilterInputDate(props: GridFilterInputDateProps) {
   const rootProps = useGridRootProps();
 
   const onFilterChange = React.useCallback(
-    (event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
-      const value = event.target.value;
-
+    (event: React.ChangeEvent<HTMLInputElement>) => {
       clearTimeout(filterTimeout.current);
-      setFilterValueState(String(value));
+      setFilterValueState(event.target.value);
 
       setIsApplying(true);
       filterTimeout.current = setTimeout(() => {
-        applyValue({ ...item, value });
+        applyValue({ ...item, value: event.target.valueAsDate });
         setIsApplying(false);
       }, SUBMIT_FILTER_DATE_STROKE_TIME);
     },
@@ -43,7 +41,11 @@ function GridFilterInputDate(props: GridFilterInputDateProps) {
 
   React.useEffect(() => {
     const itemValue = item.value ?? '';
-    setFilterValueState(String(itemValue));
+    let value = '';
+    if (itemValue instanceof Date) {
+      value = itemValue.toISOString().substring(0, 10);
+    }
+    setFilterValueState(value);
   }, [item.value]);
 
   return (
@@ -55,9 +57,7 @@ function GridFilterInputDate(props: GridFilterInputDateProps) {
       onChange={onFilterChange}
       variant="standard"
       type={type || 'text'}
-      InputLabelProps={{
-        shrink: true,
-      }}
+      InputLabelProps={{ shrink: true }}
       inputRef={focusElementRef}
       InputProps={{
         ...(applying ? { endAdornment: <GridLoadIcon /> } : {}),
