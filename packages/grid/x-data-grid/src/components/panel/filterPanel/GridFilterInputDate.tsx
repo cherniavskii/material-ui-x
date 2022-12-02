@@ -5,16 +5,39 @@ import { unstable_useId as useId } from '@mui/utils';
 import { GridLoadIcon } from '../../icons';
 import { GridFilterInputValueProps } from './GridFilterInputValueProps';
 import { useGridRootProps } from '../../../hooks/utils/useGridRootProps';
+import { GridFilterItem } from '../../../models/gridFilterItem';
 
 export type GridFilterInputDateProps = GridFilterInputValueProps &
   TextFieldProps & { type?: 'date' | 'datetime-local' };
 
 export const SUBMIT_FILTER_DATE_STROKE_TIME = 500;
 
+function convertFilterItemValueToInputValue(
+  itemValue: GridFilterItem['value'],
+  inputType: GridFilterInputDateProps['type'],
+) {
+  let value = itemValue ?? '';
+  if (itemValue instanceof Date) {
+    const dateCopy = new Date(itemValue);
+    // The date picker expects the date to be in the local timezone.
+    // But .toISOString() converts it to UTC with zero offset.
+    // So we need to remove the timezone offset from the date.
+    dateCopy.setMinutes(dateCopy.getMinutes() - dateCopy.getTimezoneOffset());
+    if (inputType === 'date') {
+      value = dateCopy.toISOString().substring(0, 10);
+    } else if (inputType === 'datetime-local') {
+      value = dateCopy.toISOString().substring(0, 19);
+    }
+  }
+  return value;
+}
+
 function GridFilterInputDate(props: GridFilterInputDateProps) {
   const { item, applyValue, type, apiRef, focusElementRef, InputProps, ...other } = props;
   const filterTimeout = React.useRef<any>();
-  const [filterValueState, setFilterValueState] = React.useState('');
+  const [filterValueState, setFilterValueState] = React.useState(() =>
+    convertFilterItemValueToInputValue(item.value, type),
+  );
   const [applying, setIsApplying] = React.useState(false);
   const id = useId();
   const rootProps = useGridRootProps();
@@ -40,20 +63,7 @@ function GridFilterInputDate(props: GridFilterInputDateProps) {
   }, []);
 
   React.useEffect(() => {
-    const itemValue = item.value ?? '';
-    let value = itemValue;
-    if (itemValue instanceof Date) {
-      const dateCopy = new Date(itemValue);
-      // The date picker expects the date to be in the local timezone.
-      // But .toISOString() converts it to UTC with zero offset.
-      // So we need to remove the timezone offset from the date.
-      dateCopy.setMinutes(dateCopy.getMinutes() - dateCopy.getTimezoneOffset());
-      if (type === 'date') {
-        value = dateCopy.toISOString().substring(0, 10);
-      } else if (type === 'datetime-local') {
-        value = dateCopy.toISOString().substring(0, 19);
-      }
-    }
+    const value = convertFilterItemValueToInputValue(item.value, type);
     setFilterValueState(value);
   }, [item.value, type]);
 
