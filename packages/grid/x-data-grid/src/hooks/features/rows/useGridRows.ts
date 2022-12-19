@@ -33,6 +33,7 @@ import {
   getRowIdFromRowModel,
 } from './gridRowsUtils';
 import { useGridRegisterPipeApplier } from '../../core/pipeProcessing';
+import { proPlanFeatureWarning } from '../../../constants/warnings';
 
 export const rowsStateInitializer: GridStateInitializer<
   Pick<DataGridProcessedProps, 'rows' | 'rowCount' | 'getRowId' | 'loading'>
@@ -181,7 +182,7 @@ export const useGridRows = (
         throw new Error(
           [
             "MUI: You can't update several rows at once in `apiRef.current.updateRows` on the DataGrid.",
-            'You need to upgrade to DataGridPro or DataGridPremium component to unlock this feature.',
+            proPlanFeatureWarning,
           ].join('\n'),
         );
       }
@@ -347,7 +348,7 @@ export const useGridRows = (
         throw new Error(
           [
             "MUI: You can't replace rows using `apiRef.current.unstable_replaceRows` on the DataGrid.",
-            'You need to upgrade to DataGridPro or DataGridPremium component to unlock this feature.',
+            proPlanFeatureWarning,
           ].join('\n'),
         );
       }

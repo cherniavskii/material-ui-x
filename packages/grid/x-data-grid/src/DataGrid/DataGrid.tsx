@@ -15,6 +15,7 @@ import { useDataGridProps } from './useDataGridProps';
 import { DataGridVirtualScroller } from '../components/DataGridVirtualScroller';
 import { DataGridColumnHeaders } from '../components/DataGridColumnHeaders';
 import { GridValidRowModel } from '../models/gridRows';
+import { proPlanFeatureWarning } from '../constants/warnings';
 
 const DataGridRaw = React.forwardRef(function DataGrid<R extends GridValidRowModel>(
   inProps: DataGridProps<R>,
@@ -107,7 +108,7 @@ DataGridRaw.propTypes = {
           `MUI: \`column.resizable = true\` is not a valid prop.`,
           'Column resizing is not available in the MIT version.',
           '',
-          'You need to upgrade to DataGridPro or DataGridPremium component to unlock this feature.',
+          proPlanFeatureWarning,
         ].join('\n'),
       );
     }
@@ -582,7 +583,7 @@ DataGridRaw.propTypes = {
           'MUI: `<DataGrid pagination={false} />` is not a valid prop.',
           'Infinite scrolling is not available in the MIT version.',
           '',
-          'You need to upgrade to DataGridPro or DataGridPremium component to disable the pagination.',
+          proPlanFeatureWarning,
         ].join('\n'),
       );
     }

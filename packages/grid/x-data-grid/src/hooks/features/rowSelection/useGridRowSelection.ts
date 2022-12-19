@@ -27,6 +27,7 @@ import { GridStateInitializer } from '../../utils/useGridInitializeState';
 import { GridRowSelectionModel } from '../../../models';
 import { GRID_DETAIL_PANEL_TOGGLE_FIELD } from '../../../constants/gridDetailPanelToggleField';
 import { gridClasses } from '../../../constants/gridClasses';
+import { proPlanFeatureWarning } from '../../../constants/warnings';
 
 const getSelectionModelPropValue = (
   selectionModelProp: DataGridProcessedProps['rowSelectionModel'],
@@ -157,8 +158,8 @@ export const useGridRowSelection = (
       ) {
         throw new Error(
           [
-            'MUI: `rowSelectionModel` can only contain 1 item in DataGrid.',
-            'You need to upgrade to DataGridPro or DataGridPremium component to unlock multiple selection.',
+            'MUI: `rowSelectionModel` can only contain 1 item in DataGrid and does not support multiple selection.',
+            proPlanFeatureWarning,
           ].join('\n'),
         );
       }

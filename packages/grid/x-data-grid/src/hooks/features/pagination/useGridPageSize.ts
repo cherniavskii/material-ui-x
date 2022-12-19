@@ -14,6 +14,7 @@ import { gridPageSizeSelector } from './gridPaginationSelector';
 import { gridDensityRowHeightSelector } from '../density';
 import { GridPipeProcessor, useGridRegisterPipeProcessor } from '../../core/pipeProcessing';
 import { calculatePinnedRowsHeight } from '../rows/gridRowsUtils';
+import { proPlanFeatureWarning } from '../../../constants/warnings';
 
 export const defaultPageSize = (autoPageSize: boolean) => (autoPageSize ? 0 : 100);
 
@@ -27,7 +28,7 @@ export const throwIfPageSizeExceedsTheLimit = (
     throw new Error(
       [
         'MUI: `pageSize` cannot exceed 100 in the MIT version of the DataGrid.',
-        'You need to upgrade to DataGridPro or DataGridPremium component to unlock this feature.',
+        proPlanFeatureWarning,
       ].join('\n'),
     );
   }
