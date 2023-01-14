@@ -232,7 +232,6 @@ function GridColumnHeaderItem(props: GridColumnHeaderItemProps) {
     <GridGenericColumnHeaderItem
       ref={headerCellRef}
       classes={classes}
-      columnMenuOpen={columnMenuOpen}
       colIndex={colIndex}
       height={headerHeight}
       isResizing={isResizing}
@@ -243,7 +242,6 @@ function GridColumnHeaderItem(props: GridColumnHeaderItemProps) {
       isDraggable={isDraggable}
       headerComponent={headerComponent}
       description={colDef.description}
-      elementId={colDef.field}
       width={colDef.computedWidth}
       columnMenuIconButton={columnMenuIconButton}
       columnTitleIconButtons={columnTitleIconButtons}

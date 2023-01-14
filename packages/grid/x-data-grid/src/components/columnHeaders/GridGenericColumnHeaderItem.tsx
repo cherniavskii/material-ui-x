@@ -10,7 +10,6 @@ import {
   GridColumnHeaderSeparatorProps,
 } from './GridColumnHeaderSeparator';
 import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
-import { GridColumnGroup } from '../../models/gridColumnGrouping';
 
 interface GridGenericColumnHeaderItemProps
   extends Pick<GridStateColDef, 'headerClassName' | 'description' | 'resizable'> {
@@ -19,18 +18,14 @@ interface GridGenericColumnHeaderItemProps
     string
   >;
   colIndex: number;
-  columnMenuOpen: boolean;
   height: number;
   isResizing: boolean;
   sortDirection: GridSortDirection;
   sortIndex?: number;
-  filterItemsCounter?: number;
   hasFocus?: boolean;
   tabIndex: 0 | -1;
-  disableReorder?: boolean;
   separatorSide?: GridColumnHeaderSeparatorProps['side'];
   headerComponent?: React.ReactNode;
-  elementId: GridStateColDef['field'] | GridColumnGroup['groupId'];
   isDraggable: boolean;
   width: number;
   columnMenuIconButton?: React.ReactNode;
@@ -47,7 +42,6 @@ const GridGenericColumnHeaderItem = React.forwardRef(function GridGenericColumnH
 ) {
   const {
     classes,
-    columnMenuOpen,
     colIndex,
     height,
     isResizing,
@@ -58,7 +52,6 @@ const GridGenericColumnHeaderItem = React.forwardRef(function GridGenericColumnH
     isDraggable,
     headerComponent,
     description,
-    elementId,
     width,
     columnMenuIconButton = null,
     columnMenu = null,
@@ -74,7 +67,6 @@ const GridGenericColumnHeaderItem = React.forwardRef(function GridGenericColumnH
   const apiRef = useGridPrivateApiContext();
   const rootProps = useGridRootProps();
   const headerCellRef = React.useRef<HTMLDivElement>(null);
-  const [showColumnMenuIcon, setShowColumnMenuIcon] = React.useState(columnMenuOpen);
 
   const handleRef = useForkRef(headerCellRef, ref);
 
@@ -82,12 +74,6 @@ const GridGenericColumnHeaderItem = React.forwardRef(function GridGenericColumnH
   if (sortDirection != null) {
     ariaSort = sortDirection === 'asc' ? 'ascending' : 'descending';
   }
-
-  React.useEffect(() => {
-    if (!showColumnMenuIcon) {
-      setShowColumnMenuIcon(columnMenuOpen);
-    }
-  }, [showColumnMenuIcon, columnMenuOpen]);
 
   React.useLayoutEffect(() => {
     const columnMenuState = apiRef.current.state.columnMenu;
