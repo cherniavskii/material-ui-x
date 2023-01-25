@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import {
   unstable_composeClasses as composeClasses,
   unstable_useForkRef as useForkRef,
+  unstable_useEnhancedEffect as useEnhancedEffect,
 } from '@mui/utils';
 import { GridRenderCellParams } from '../../models/params/gridCellParams';
 import { isSpaceKey } from '../../utils/keyboardUtils';
@@ -60,7 +61,7 @@ const GridCellCheckboxForwardRef = React.forwardRef<HTMLInputElement, GridRender
       apiRef.current.publishEvent('rowSelectionCheckboxChange', params, event);
     };
 
-    React.useLayoutEffect(() => {
+    useEnhancedEffect(() => {
       if (tabIndex === 0 && element) {
         element!.tabIndex = -1;
       }

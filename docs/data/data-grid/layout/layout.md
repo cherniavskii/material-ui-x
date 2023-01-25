@@ -30,6 +30,10 @@ This is not recommended for large datasets as row virtualization will not be abl
 
 {{"demo": "AutoHeightGrid.js", "bg": "inline"}}
 
+## Server side rendering
+
+{{"demo": "SSRGrid.js", "bg": "inline"}}
+
 ## API
 
 - [DataGrid](/x/api/data-grid/data-grid/)

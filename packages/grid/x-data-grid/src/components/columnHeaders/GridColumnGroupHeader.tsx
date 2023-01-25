@@ -1,5 +1,9 @@
 import * as React from 'react';
-import { unstable_useId as useId, unstable_composeClasses as composeClasses } from '@mui/utils';
+import {
+  unstable_useId as useId,
+  unstable_composeClasses as composeClasses,
+  unstable_useEnhancedEffect as useEnhancedEffect,
+} from '@mui/utils';
 import { GridAlignment } from '../../models/colDef/gridColDef';
 import { getDataGridUtilityClass } from '../../constants/gridClasses';
 import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
@@ -117,7 +121,7 @@ function GridColumnGroupHeader(props: GridColumnGroupHeaderProps) {
   const elementId = groupId === null ? `empty-group-cell-${id}` : groupId;
   const classes = useUtilityClasses(ownerState);
 
-  React.useLayoutEffect(() => {
+  useEnhancedEffect(() => {
     if (hasFocus) {
       const focusableElement = headerCellRef.current!.querySelector<HTMLElement>('[tabindex="0"]');
       const elementToFocus = focusableElement || headerCellRef.current;

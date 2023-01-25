@@ -10,11 +10,12 @@ interface DataGridColumnHeadersProps extends React.HTMLAttributes<HTMLDivElement
 
 export const DataGridColumnHeaders = React.forwardRef<HTMLDivElement, DataGridColumnHeadersProps>(
   function GridColumnsHeader(props, ref) {
-    const { innerRef, className, ...other } = props;
+    const { innerRef, className, renderContext, ...other } = props;
 
     const { isDragging, getRootProps, getInnerProps, getColumnHeaders, getColumnGroupHeaders } =
       useGridColumnHeaders({
         innerRef,
+        renderContext,
       });
 
     return (

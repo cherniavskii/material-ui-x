@@ -1,6 +1,9 @@
 import * as React from 'react';
 import * as ReactDOM from 'react-dom';
-import { unstable_useForkRef as useForkRef } from '@mui/utils';
+import {
+  unstable_useForkRef as useForkRef,
+  unstable_useEnhancedEffect as useEnhancedEffect,
+} from '@mui/utils';
 import { styled } from '@mui/material/styles';
 import { defaultMemoize } from 'reselect';
 import { useGridPrivateApiContext } from '../../utils/useGridPrivateApiContext';
@@ -70,7 +73,7 @@ function isUIEvent(event: any): event is React.UIEvent {
 }
 
 export const useGridColumnHeaders = (props: UseGridColumnHeadersProps) => {
-  const { innerRef: innerRefProp, minColumnIndex = 0 } = props;
+  const { innerRef: innerRefProp, minColumnIndex = 0, renderContext } = props;
 
   const [dragCol, setDragCol] = React.useState('');
   const [resizeCol, setResizeCol] = React.useState('');
@@ -102,7 +105,6 @@ export const useGridColumnHeaders = (props: UseGridColumnHeadersProps) => {
   const rootProps = useGridRootProps();
   const innerRef = React.useRef<HTMLDivElement>(null);
   const handleInnerRef = useForkRef(innerRefProp, innerRef);
-  const [renderContext, setRenderContext] = React.useState<GridRenderContext | null>(null);
   const prevRenderContext = React.useRef<GridRenderContext | null>(renderContext);
   const prevScrollLeft = React.useRef(0);
   const currentPage = useGridVisibleRows(apiRef, rootProps);
@@ -158,7 +160,7 @@ export const useGridColumnHeaders = (props: UseGridColumnHeadersProps) => {
     ],
   );
 
-  React.useLayoutEffect(() => {
+  useEnhancedEffect(() => {
     if (renderContext) {
       updateInnerPosition(renderContext);
     }
@@ -191,12 +193,12 @@ export const useGridColumnHeaders = (props: UseGridColumnHeadersProps) => {
           // To prevent flickering, the inner position can only be updated after the new context has
           // been rendered. ReactDOM.flushSync ensures that the state changes will happen before
           // updating the position.
-          ReactDOM.flushSync(() => {
-            setRenderContext(nextRenderContext);
-          });
+          // ReactDOM.flushSync(() => {
+          //   setRenderContext(nextRenderContext);
+          // });
           canUpdateInnerPosition = true;
         } else {
-          setRenderContext(nextRenderContext);
+          // setRenderContext(nextRenderContext);
         }
         prevRenderContext.current = nextRenderContext;
       } else {

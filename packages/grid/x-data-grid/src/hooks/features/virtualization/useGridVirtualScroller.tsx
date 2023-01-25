@@ -87,9 +87,15 @@ interface UseGridVirtualScrollerProps {
 }
 
 interface ContainerDimensions {
-  width: number | null;
-  height: number | null;
+  width: number;
+  height: number;
 }
+
+// TODO: get it from the prop
+const initialViewportSize = {
+  height: 500,
+  width: 500,
+};
 
 export const useGridVirtualScroller = (props: UseGridVirtualScrollerProps) => {
   const apiRef = useGridPrivateApiContext();
@@ -116,13 +122,9 @@ export const useGridVirtualScroller = (props: UseGridVirtualScrollerProps) => {
   const renderZoneRef = React.useRef<HTMLDivElement>(null);
   const rootRef = React.useRef<HTMLDivElement>(null);
   const handleRef = useForkRef(ref, rootRef);
-  const [renderContext, setRenderContext] = React.useState<GridRenderContext | null>(null);
-  const prevRenderContext = React.useRef<GridRenderContext | null>(renderContext);
   const scrollPosition = React.useRef({ top: 0, left: 0 });
-  const [containerDimensions, setContainerDimensions] = React.useState<ContainerDimensions>({
-    width: null,
-    height: null,
-  });
+  const [containerDimensions, setContainerDimensions] =
+    React.useState<ContainerDimensions>(initialViewportSize);
   const prevTotalWidth = React.useRef(columnsTotalWidth);
 
   const getNearestIndexToRender = React.useCallback(
@@ -169,11 +171,14 @@ export const useGridVirtualScroller = (props: UseGridVirtualScrollerProps) => {
 
     // Clamp the value because the search may return an index out of bounds.
     // In the last index, this is not needed because Array.slice doesn't include it.
-    const firstRowIndex = Math.min(getNearestIndexToRender(top), rowsMeta.positions.length - 1);
-
-    const lastRowIndex = rootProps.autoHeight
-      ? firstRowIndex + currentPage.rows.length
-      : getNearestIndexToRender(top + containerDimensions.height!);
+    let firstRowIndex = 0;
+    let lastRowIndex = Math.round(containerDimensions.height / rootProps.rowHeight - 1);
+    if (rowsMeta.positions.length !== 0) {
+      firstRowIndex = Math.min(getNearestIndexToRender(top), rowsMeta.positions.length - 1);
+      lastRowIndex = rootProps.autoHeight
+        ? firstRowIndex + currentPage.rows.length
+        : getNearestIndexToRender(top + containerDimensions.height!);
+    }
 
     let hasRowWithAutoHeight = false;
     let firstColumnIndex = 0;
@@ -214,7 +219,11 @@ export const useGridVirtualScroller = (props: UseGridVirtualScrollerProps) => {
     visibleColumns.length,
     apiRef,
     containerDimensions,
+    rootProps.rowHeight,
   ]);
+
+  const [renderContext, setRenderContext] = React.useState<GridRenderContext>(computeRenderContext);
+  const prevRenderContext = React.useRef<GridRenderContext | null>(renderContext);
 
   useEnhancedEffect(() => {
     if (disableVirtualization) {

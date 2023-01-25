@@ -2,6 +2,7 @@ import * as React from 'react';
 import Box from '@mui/material/Box';
 import { styled, SxProps, Theme } from '@mui/material/styles';
 import { GridRowId } from '@mui/x-data-grid';
+import { unstable_useEnhancedEffect as useEnhancedEffect } from '@mui/utils';
 import { useGridPrivateApiContext } from '../hooks/utils/useGridPrivateApiContext';
 
 const DetailPanel = styled(Box, {
@@ -36,14 +37,14 @@ function GridDetailPanel(props: GridDetailPanelProps) {
   const apiRef = useGridPrivateApiContext();
   const ref = React.useRef<HTMLDivElement>();
 
-  React.useLayoutEffect(() => {
+  useEnhancedEffect(() => {
     if (height === 'auto' && ref.current && typeof ResizeObserver === 'undefined') {
       // Fallback for IE
       apiRef.current.storeDetailPanelHeight(rowId, ref.current.clientHeight);
     }
   }, [apiRef, height, rowId]);
 
-  React.useLayoutEffect(() => {
+  useEnhancedEffect(() => {
     const hasFixedHeight = height !== 'auto';
     if (!ref.current || hasFixedHeight || typeof ResizeObserver === 'undefined') {
       return undefined;

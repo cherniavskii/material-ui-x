@@ -4,6 +4,7 @@ import clsx from 'clsx';
 import {
   unstable_composeClasses as composeClasses,
   unstable_useForkRef as useForkRef,
+  unstable_useEnhancedEffect as useEnhancedEffect,
 } from '@mui/utils';
 import { GridRowEventLookup } from '../models/events';
 import { GridRowId, GridRowModel, GridTreeNodeWithRender } from '../models/gridRows';
@@ -145,14 +146,14 @@ const GridRow = React.forwardRef<
 
   const classes = useUtilityClasses(ownerState);
 
-  React.useLayoutEffect(() => {
+  useEnhancedEffect(() => {
     if (rowHeight === 'auto' && ref.current && typeof ResizeObserver === 'undefined') {
       // Fallback for IE
       apiRef.current.unstable_storeRowHeightMeasurement(rowId, ref.current.clientHeight, position);
     }
   }, [apiRef, rowHeight, rowId, position]);
 
-  React.useLayoutEffect(() => {
+  useEnhancedEffect(() => {
     if (currentPage.range) {
       // The index prop is relative to the rows from all pages. As example, the index prop of the
       // first row is 5 if `paginationModel.pageSize=5` and `paginationModel.page=1`. However, the index used by the virtualization
