@@ -91,6 +91,12 @@ interface ContainerDimensions {
   height: number | null;
 }
 
+// TODO: get it from the prop
+const initialViewportSize = {
+  height: 500,
+  width: 500,
+};
+
 export const useGridVirtualScroller = (props: UseGridVirtualScrollerProps) => {
   const apiRef = useGridPrivateApiContext();
   const rootProps = useGridRootProps();
@@ -116,13 +122,9 @@ export const useGridVirtualScroller = (props: UseGridVirtualScrollerProps) => {
   const renderZoneRef = React.useRef<HTMLDivElement>(null);
   const rootRef = React.useRef<HTMLDivElement>(null);
   const handleRef = useForkRef(ref, rootRef);
-  const [renderContext, setRenderContext] = React.useState<GridRenderContext | null>(null);
-  const prevRenderContext = React.useRef<GridRenderContext | null>(renderContext);
   const scrollPosition = React.useRef({ top: 0, left: 0 });
-  const [containerDimensions, setContainerDimensions] = React.useState<ContainerDimensions>({
-    width: null,
-    height: null,
-  });
+  const [containerDimensions, setContainerDimensions] =
+    React.useState<ContainerDimensions>(initialViewportSize);
   const prevTotalWidth = React.useRef(columnsTotalWidth);
 
   const getNearestIndexToRender = React.useCallback(
@@ -215,6 +217,9 @@ export const useGridVirtualScroller = (props: UseGridVirtualScrollerProps) => {
     apiRef,
     containerDimensions,
   ]);
+
+  const [renderContext, setRenderContext] = React.useState<GridRenderContext>(computeRenderContext);
+  const prevRenderContext = React.useRef<GridRenderContext | null>(renderContext);
 
   useEnhancedEffect(() => {
     if (disableVirtualization) {

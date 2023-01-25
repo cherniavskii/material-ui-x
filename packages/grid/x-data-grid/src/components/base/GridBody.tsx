@@ -5,6 +5,7 @@ import { ElementSize } from '../../models/elementSize';
 import { GridMainContainer } from '../containers/GridMainContainer';
 import { GridAutoSizer } from '../GridAutoSizer';
 import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
+import { useGridVirtualScroller } from '../../hooks/features/virtualization/useGridVirtualScroller';
 
 interface GridBodyProps {
   children?: React.ReactNode;
@@ -62,6 +63,11 @@ function GridBody(props: GridBodyProps) {
     virtualScrollerRef,
   });
 
+  const virtualScroller = useGridVirtualScroller({
+    ref: virtualScrollerRef,
+    disableVirtualization: isVirtualizationDisabled,
+  });
+
   const handleResize = React.useCallback(
     (size: ElementSize) => {
       apiRef.current.publishEvent('resize', size);
@@ -71,16 +77,17 @@ function GridBody(props: GridBodyProps) {
 
   return (
     <GridMainContainer>
-      <ColumnHeadersComponent ref={columnsContainerRef} innerRef={columnHeadersRef} />
+      <ColumnHeadersComponent
+        ref={columnsContainerRef}
+        innerRef={columnHeadersRef}
+        renderContext={virtualScroller.renderContext}
+      />
       <GridAutoSizer
         nonce={rootProps.nonce}
         disableHeight={rootProps.autoHeight}
         onResize={handleResize}
       >
-        <VirtualScrollerComponent
-          ref={virtualScrollerRef}
-          disableVirtualization={isVirtualizationDisabled}
-        />
+        <VirtualScrollerComponent virtualScroller={virtualScroller} />
       </GridAutoSizer>
       {children}
     </GridMainContainer>

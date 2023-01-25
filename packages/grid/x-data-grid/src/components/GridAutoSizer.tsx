@@ -56,6 +56,12 @@ export interface AutoSizerProps
   onResize?: (size: AutoSizerSize) => void;
 }
 
+// TODO: get it from the prop
+const initialViewportSize = {
+  height: 500,
+  width: 500,
+};
+
 const GridAutoSizer = React.forwardRef<HTMLDivElement, AutoSizerProps>(function AutoSizer(
   props,
   ref,
@@ -72,10 +78,9 @@ const GridAutoSizer = React.forwardRef<HTMLDivElement, AutoSizerProps>(function 
     ...other
   } = props;
 
-  const [state, setState] = React.useState<{ height: number | null; width: number | null }>({
-    height: defaultHeight,
-    width: defaultWidth,
-  });
+  const [state, setState] = React.useState<{ height: number | null; width: number | null }>(
+    initialViewportSize,
+  );
 
   const rootRef = React.useRef<HTMLDivElement | null>(null);
   const parentElement = React.useRef<HTMLElement | null>(null);
