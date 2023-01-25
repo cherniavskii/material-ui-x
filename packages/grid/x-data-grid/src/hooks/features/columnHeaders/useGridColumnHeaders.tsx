@@ -1,6 +1,9 @@
 import * as React from 'react';
 import * as ReactDOM from 'react-dom';
-import { unstable_useForkRef as useForkRef } from '@mui/utils';
+import {
+  unstable_useForkRef as useForkRef,
+  unstable_useEnhancedEffect as useEnhancedEffect,
+} from '@mui/utils';
 import { styled } from '@mui/material/styles';
 import { defaultMemoize } from 'reselect';
 import { useGridPrivateApiContext } from '../../utils/useGridPrivateApiContext';
@@ -157,7 +160,7 @@ export const useGridColumnHeaders = (props: UseGridColumnHeadersProps) => {
     ],
   );
 
-  React.useLayoutEffect(() => {
+  useEnhancedEffect(() => {
     if (renderContext) {
       updateInnerPosition(renderContext);
     }

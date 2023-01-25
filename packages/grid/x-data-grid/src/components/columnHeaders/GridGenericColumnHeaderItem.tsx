@@ -1,6 +1,9 @@
 import * as React from 'react';
 import clsx from 'clsx';
-import { unstable_useForkRef as useForkRef } from '@mui/utils';
+import {
+  unstable_useForkRef as useForkRef,
+  unstable_useEnhancedEffect as useEnhancedEffect,
+} from '@mui/utils';
 import { GridStateColDef } from '../../models/colDef/gridColDef';
 import { GridSortDirection } from '../../models/gridSortModel';
 import { useGridPrivateApiContext } from '../../hooks/utils/useGridPrivateApiContext';
@@ -89,7 +92,7 @@ const GridGenericColumnHeaderItem = React.forwardRef(function GridGenericColumnH
     }
   }, [showColumnMenuIcon, columnMenuOpen]);
 
-  React.useLayoutEffect(() => {
+  useEnhancedEffect(() => {
     const columnMenuState = apiRef.current.state.columnMenu;
     if (hasFocus && !columnMenuState.open) {
       const focusableElement = headerCellRef.current!.querySelector<HTMLElement>('[tabindex="0"]');
