@@ -75,21 +75,9 @@ const GridRoot = React.forwardRef<HTMLDivElement, GridRootProps>(function GridRo
 
   apiRef.current.register('public', { rootElementRef: rootContainerRef });
 
-  // Our implementation of <NoSsr />
-  const [mountedState, setMountedState] = React.useState(false);
   useEnhancedEffect(() => {
-    setMountedState(true);
-  }, []);
-
-  useEnhancedEffect(() => {
-    if (mountedState) {
-      apiRef.current.updateGridDimensionsRef();
-    }
-  }, [apiRef, mountedState]);
-
-  if (!mountedState) {
-    return null;
-  }
+    apiRef.current.updateGridDimensionsRef();
+  }, [apiRef]);
 
   return (
     <GridRootStyles
