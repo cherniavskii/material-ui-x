@@ -88,7 +88,7 @@ On the other hand, if you only want to initialize the grid with some rows alread
 
 ## Using a detail panel as a form
 
-As an alternative to the built-in [row editing](/x/react-data-grid/editing/#row-editing), a form component can be rendered inside the detail panel, allowing the user to edit the current row values.
+As an alternative to the built-in [row editing](/x/react-data-grid/row-editing/), a form component can be rendered inside the detail panel, allowing the user to edit the current row values.
 
 The following demo shows integration with [react-hook-form](https://react-hook-form.com/), but other form libraries are also supported.
 

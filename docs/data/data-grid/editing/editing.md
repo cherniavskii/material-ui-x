@@ -13,7 +13,7 @@ You can make a column editable by enabling the `editable` property in its [colum
 This lets the user edit any cell from the specified column.
 By default, only one cell at a time can have its `editMode` prop set to `"edit"`.
 To let your users edit all cells in a given row simultaneously, set the `editMode` prop to `"row"`.
-For more information, see [the section on row editing](#row-editing).
+For more information, see [the section on row editing](/x/react-data-grid/row-editing/).
 
 The following demo shows an example of how to make all columns editable.
 Play with it by double-clicking or pressing <kbd class="key">Enter</kbd> in any cell from this column:
@@ -184,7 +184,7 @@ Additionally, the callback props `onCellModesModelChange` and `onRowModesModelCh
 Use them to update the respective prop.
 
 In the demo below, `cellModesModel` is used to control the mode of selected cell using the external buttons.
-For an example using row editing check the [full-featured CRUD component](#full-featured-crud-component).
+For an example using row editing check the [full-featured CRUD component](/x/react-data-grid/row-editing/#full-featured-crud-component).
 
 {{"demo": "StartEditButtonGrid.js", "bg": "inline", "defaultCodeOpen": false}}
 
@@ -393,35 +393,6 @@ The following demo implements an edit component with auto-stop, based on a nativ
 Avoid using edit components with auto-stop in columns that use long-running `preProcessEditCellProps` because the UI will freeze while waiting for `apiRef.current.setEditCellValue`.
 Instead, use the provided interactions to exit edit mode.
 :::
-
-## Row editing
-
-Row editing lets the user edit all cells in a row simultaneously.
-The same basic rules for cell editing also apply to row editing.
-To enable it, change the `editMode` prop to `"row"`, then follow the same guidelines as those for cell editing to set the `editable` property in the definition of the columns that the user can edit.
-
-```tsx
-<DataGrid editMode="row" columns={[{ field: 'name', editable: true }]} />
-```
-
-The following demo illustrates how row editing works.
-The user can [start](#start-editing) and [stop](#stop-editing) editing a row using the same actions as those provided for cell editing (e.g. double-clicking a cell).
-
-{{"demo": "BasicRowEditingGrid.js", "bg": "inline", "defaultCodeOpen": false}}
-
-:::warning
-By design, when changing the value of a cell all `preProcessEditCellProps` callbacks from other columns are also called.
-This lets you apply conditional validation where the value of a cell impacts the validation status of another cell in the same row.
-If you only want to run validation when the value has changed, check if the `hasChanged` param is `true`.
-:::
-
-### Full-featured CRUD component
-
-Row editing makes it possible to create a full-featured CRUD (Create, Read, Update, Delete) component similar to those found in enterprise applications.
-In the following demo, the typical ways to start and stop editing are all disabled.
-Instead, use the buttons available in each row or in the toolbar.
-
-{{"demo": "FullFeaturedCrudGrid.js", "bg": "inline", "defaultCodeOpen": false}}
 
 ## Advanced use cases
 
