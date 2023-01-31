@@ -1,6 +1,6 @@
-# Data Grid - Editing recipes
+# Data Grid - Editing examples
 
-<p class="description">Advanced grid customization recipes.</p>
+<p class="description">Advanced grid customization examples.</p>
 
 ## Multiline editing
 

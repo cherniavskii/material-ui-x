@@ -1,5 +1,6 @@
 / /x/introduction/ 301
 /x/ https://mui.com/x/ 302
+
 # Avoid conflicts with the other Next.js apps hosted under https://mui.com/
 /x/_next/* /_next/:splat
 
@@ -22,6 +23,7 @@
 /de/* /:splat 200
 /ja/* /:splat 200
 # 2022
+
 /x/license/ https://mui.com/legal/mui-x-eula/ 301
 /x/react-data-grid/group-pivot/ /x/react-data-grid/tree-data/ 301
 /:lang/x/react-data-grid/group-pivot/ /:lang/x/react-data-grid/tree-data/ 301
@@ -43,5 +45,7 @@
 /:lang/x/api/date-pickers/clock-picker/ /:lang/x/api/date-pickers/time-clock/ 301
 /:lang/x/* /x/:splat 301
 # 2023
+
+/x/react-data-grid/recipes-editing/ /x/react-data-grid/editing-examples/ 301
 
 # Proxies

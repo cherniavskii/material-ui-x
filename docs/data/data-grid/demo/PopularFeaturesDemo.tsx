@@ -34,7 +34,7 @@ import ColumnVirtualizationGrid from '../virtualization/ColumnVirtualizationGrid
 import FullFeaturedDemo from './FullFeaturedDemo';
 import LazyLoadingGrid from '../row-updates/LazyLoadingGrid';
 import BasicGroupingDemo from '../column-groups/BasicGroupingDemo';
-import EditingWithDatePickers from '../recipes-editing/EditingWithDatePickers';
+import EditingWithDatePickers from '../editing-examples/EditingWithDatePickers';
 
 type Row = {
   id: number;

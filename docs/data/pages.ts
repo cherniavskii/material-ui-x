@@ -56,7 +56,7 @@ const pages: MuiPage[] = [
           { pathname: '/x/react-data-grid/row-editing' },
           { pathname: '/x/react-data-grid/custom-edit-component' },
           { pathname: '/x/react-data-grid/editing-events' },
-          { pathname: '/x/react-data-grid/recipes-editing', title: 'Recipes' },
+          { pathname: '/x/react-data-grid/editing-examples', title: 'Examples' },
         ],
       },
       { pathname: '/x/react-data-grid/sorting' },

@@ -248,10 +248,6 @@ The demo also employs validation to prevent entering an empty name.
 
 {{"demo": "AskConfirmationBeforeSave.js", "bg": "inline", "defaultCodeOpen": false}}
 
-## Advanced use cases
-
-See [Editing recipes](/x/react-data-grid/recipes-editing/) for more advanced use cases.
-
 ## apiRef
 
 {{"demo": "EditApiNoSnap.js", "bg": "inline", "hideToolbar": true}}
