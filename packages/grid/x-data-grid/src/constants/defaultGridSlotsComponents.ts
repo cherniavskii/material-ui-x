@@ -7,6 +7,7 @@ import MUIButton from '@mui/material/Button';
 import MUIIconButton from '@mui/material/IconButton';
 import MUITooltip from '@mui/material/Tooltip';
 import MUIPopper from '@mui/material/Popper';
+import Skeleton from '@mui/material/Skeleton';
 import { GridIconSlotsComponent, GridSlotsComponent } from '../models';
 import {
   GridArrowDownwardIcon,
@@ -96,6 +97,7 @@ export const DATA_GRID_DEFAULT_SLOTS_COMPONENTS: GridSlotsComponent = {
   BasePopper: MUIPopper,
   Cell: GridCell,
   SkeletonCell: GridSkeletonCell,
+  Skeleton,
   ColumnHeaderFilterIconButton: GridColumnHeaderFilterIconButton,
   ColumnMenu: GridColumnMenu,
   Footer: GridFooter,

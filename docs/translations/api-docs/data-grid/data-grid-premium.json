@@ -742,6 +742,7 @@
     "quickFilterIcon": "Icon displayed on the quick filter input.",
     "row": "Component rendered for each row.",
     "rowReorderIcon": "Icon displayed on the <code>reorder</code> column type to reorder a row.",
+    "skeleton": "The skeleton component rendered in SkeletonCell.",
     "skeletonCell": "Component rendered for each skeleton cell.",
     "toolbar": "Toolbar component rendered inside the Header component.",
     "treeDataCollapseIcon": "Icon displayed on the tree data toggling column when the children are expanded",

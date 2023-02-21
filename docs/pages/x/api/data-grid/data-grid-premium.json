@@ -354,6 +354,7 @@
     "quickFilterIcon": { "default": "GridSearchIcon", "type": { "name": "elementType" } },
     "row": { "default": "GridRow", "type": { "name": "elementType" } },
     "rowReorderIcon": { "default": "GridDragIcon", "type": { "name": "elementType" } },
+    "skeleton": { "default": "Skeleton", "type": { "name": "elementType" } },
     "skeletonCell": { "default": "GridSkeletonCell", "type": { "name": "elementType" } },
     "toolbar": { "default": "null", "type": { "name": "elementType | null" } },
     "treeDataCollapseIcon": { "default": "GridExpandMoreIcon", "type": { "name": "elementType" } },
