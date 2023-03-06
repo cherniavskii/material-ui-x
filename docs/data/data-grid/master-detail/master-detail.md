@@ -94,6 +94,10 @@ The following demo shows integration with [react-hook-form](https://react-hook-f
 
 {{"demo": "FormDetailPanel.js", "bg": "inline", "defaultCodeOpen": false}}
 
+## Fetching detail panel content on open
+
+{{"demo": "FetchDetailPanelContentOnOnen.js", "bg": "inline", "defaultCodeOpen": false}}
+
 ## Customizing the detail panel toggle
 
 To change the icon used for the toggle, you can provide a different component for the [icon slot](/x/react-data-grid/components/#icons) as follow:
