@@ -7,4 +7,4 @@ export type GridNativeColTypes =
   | 'singleSelect'
   | 'actions';
 
-export type GridColType = GridNativeColTypes | string;
+export type GridColType = GridNativeColTypes;
