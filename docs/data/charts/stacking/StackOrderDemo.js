@@ -1,9 +1,10 @@
 import * as React from 'react';
-import Box from '@mui/material/Box';
 import Stack from '@mui/material/Stack';
 import TextField from '@mui/material/TextField';
 import MenuItem from '@mui/material/MenuItem';
 import { BarChart } from '@mui/x-charts/BarChart';
+
+import { axisClasses } from '@mui/x-charts/ChartsAxis';
 
 // Data comming from https://www.insee.fr/fr/statistiques/5013868
 const commonTransportation = [
@@ -72,7 +73,7 @@ const xAxis = {
 
 const series = [
   { label: 'Car', data: car, stack: 'total' },
-  { label: 'Common Transportation', data: commonTransportation, stack: 'total' },
+  { label: 'Public T.', data: commonTransportation, stack: 'total' },
   { label: 'Motorcycle', data: motorcycle, stack: 'total' },
   { label: 'Walk', data: walking, stack: 'total' },
   { label: 'Bike', data: biking, stack: 'total' },
@@ -91,7 +92,7 @@ export default function StackOrderDemo() {
 
   const modifiedSeries = [{ ...series[0], stackOrder }, ...series.slice(1)];
   return (
-    <Box>
+    <div>
       <Stack direction="row">
         <TextField
           sx={{ minWidth: 150, mr: 5 }}
@@ -109,21 +110,25 @@ export default function StackOrderDemo() {
       </Stack>
       <BarChart
         width={700}
-        height={400}
+        height={300}
         xAxis={[xAxis]}
         yAxis={[{ min: 0, max: 100 }]}
         series={modifiedSeries}
+        margin={{ bottom: 60 }}
         sx={{
-          '.MuiAxis-bottom': {
-            '.MuiAxis-tickLabel': {
-              transform: 'translate(0, 23px) rotate(45deg)',
+          [`.${axisClasses.bottom}`]: {
+            [`.${axisClasses.tickLabel}`]: {
+              transform: 'rotate(45deg)',
+              dominantBaseline: 'hanging',
+              textAnchor: 'start',
             },
-            '.MuiAxis-label': {
-              transform: 'translate(400px, 50px)',
+            [`.${axisClasses.label}`]: {
+              transform: 'translateY(15px)',
             },
           },
+          '--ChartsLegend-itemWidth': '110px',
         }}
       />
-    </Box>
+    </div>
   );
 }

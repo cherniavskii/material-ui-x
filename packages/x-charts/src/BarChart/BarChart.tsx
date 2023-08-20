@@ -1,23 +1,55 @@
 import * as React from 'react';
 import useId from '@mui/utils/useId';
 import PropTypes from 'prop-types';
-import { BarPlot } from './BarPlot';
-import { ChartContainer, ChartContainerProps } from '../ChartContainer';
-import { Axis, AxisProps } from '../Axis';
+import { BarPlot, BarPlotSlotComponentProps, BarPlotSlotsComponent } from './BarPlot';
+import {
+  ResponsiveChartContainer,
+  ResponsiveChartContainerProps,
+} from '../ResponsiveChartContainer';
+import { ChartsAxis, ChartsAxisProps } from '../ChartsAxis';
 import { BarSeriesType } from '../models/seriesType/bar';
 import { MakeOptional } from '../models/helpers';
 import { DEFAULT_X_AXIS_KEY } from '../constants';
-import { Tooltip, TooltipProps } from '../Tooltip';
-import { Highlight, HighlightProps } from '../Highlight';
-import { ClipPath } from '../ClipPath/ClipPath';
+import { ChartsTooltip, ChartsTooltipProps } from '../ChartsTooltip';
+import {
+  ChartsLegend,
+  ChartsLegendProps,
+  ChartsLegendSlotsComponent,
+  ChartsLegendSlotComponentProps,
+} from '../ChartsLegend';
+import { ChartsAxisHighlight, ChartsAxisHighlightProps } from '../ChartsAxisHighlight';
+import { ChartsClipPath } from '../ChartsClipPath';
+import { ChartsAxisSlotsComponent, ChartsAxisSlotComponentProps } from '../models/axis';
 
-export interface BarChartProps extends Omit<ChartContainerProps, 'series'>, AxisProps {
+export interface BarChartSlotsComponent
+  extends ChartsAxisSlotsComponent,
+    BarPlotSlotsComponent,
+    ChartsLegendSlotsComponent {}
+export interface BarChartSlotComponentProps
+  extends ChartsAxisSlotComponentProps,
+    BarPlotSlotComponentProps,
+    ChartsLegendSlotComponentProps {}
+
+export interface BarChartProps
+  extends Omit<ResponsiveChartContainerProps, 'series'>,
+    Omit<ChartsAxisProps, 'slots' | 'slotProps'> {
   series: MakeOptional<BarSeriesType, 'type'>[];
-  tooltip?: TooltipProps;
-  highlight?: HighlightProps;
+  tooltip?: ChartsTooltipProps;
+  axisHighlight?: ChartsAxisHighlightProps;
+  legend?: ChartsLegendProps;
+  /**
+   * Overridable component slots.
+   * @default {}
+   */
+  slots?: BarChartSlotsComponent;
+  /**
+   * The props used for each component slot.
+   * @default {}
+   */
+  slotProps?: BarChartSlotComponentProps;
 }
 
-function BarChart(props: BarChartProps) {
+const BarChart = React.forwardRef(function BarChart(props: BarChartProps, ref) {
   const {
     xAxis,
     yAxis,
@@ -26,21 +58,26 @@ function BarChart(props: BarChartProps) {
     height,
     margin,
     colors,
+    dataset,
     sx,
     tooltip,
-    highlight,
+    axisHighlight,
+    legend,
     topAxis,
     leftAxis,
     rightAxis,
     bottomAxis,
     children,
+    slots,
+    slotProps,
   } = props;
 
   const id = useId();
   const clipPathId = `${id}-clip-path`;
 
   return (
-    <ChartContainer
+    <ResponsiveChartContainer
+      ref={ref}
       series={series.map((s) => ({ type: 'bar', ...s }))}
       width={width}
       height={height}
@@ -50,7 +87,8 @@ function BarChart(props: BarChartProps) {
           {
             id: DEFAULT_X_AXIS_KEY,
             scaleType: 'band',
-            data: [...new Array(Math.max(...series.map((s) => s.data.length)))].map(
+            data: Array.from(
+              { length: Math.max(...series.map((s) => (s.data ?? dataset ?? []).length)) },
               (_, index) => index,
             ),
           },
@@ -58,31 +96,44 @@ function BarChart(props: BarChartProps) {
       }
       yAxis={yAxis}
       colors={colors}
+      dataset={dataset}
       sx={sx}
       disableAxisListener={
-        tooltip?.trigger !== 'axis' && highlight?.x === 'none' && highlight?.y === 'none'
+        tooltip?.trigger !== 'axis' && axisHighlight?.x === 'none' && axisHighlight?.y === 'none'
       }
     >
       <g clipPath={`url(#${clipPathId})`}>
-        <BarPlot />
+        <BarPlot slots={slots} slotProps={slotProps} />
       </g>
-      <Axis topAxis={topAxis} leftAxis={leftAxis} rightAxis={rightAxis} bottomAxis={bottomAxis} />
-      <Highlight {...highlight} />
-      <Tooltip {...tooltip} />
-      <ClipPath id={clipPathId} />
+      <ChartsAxis
+        topAxis={topAxis}
+        leftAxis={leftAxis}
+        rightAxis={rightAxis}
+        bottomAxis={bottomAxis}
+        slots={slots}
+        slotProps={slotProps}
+      />
+      <ChartsLegend {...legend} slots={slots} slotProps={slotProps} />
+      <ChartsAxisHighlight x="band" {...axisHighlight} />
+      <ChartsTooltip {...tooltip} slots={slots} slotProps={slotProps} />
+      <ChartsClipPath id={clipPathId} />
       {children}
-    </ChartContainer>
+    </ResponsiveChartContainer>
   );
-}
+});
 
 BarChart.propTypes = {
   // ----------------------------- Warning --------------------------------
   // | These PropTypes are generated from the TypeScript type definitions |
   // | To update them edit the TypeScript types and run "yarn proptypes"  |
   // ----------------------------------------------------------------------
+  axisHighlight: PropTypes.shape({
+    x: PropTypes.oneOf(['band', 'line', 'none']),
+    y: PropTypes.oneOf(['line', 'none']),
+  }),
   /**
-   * Indicate which axis to display the the bottom of the charts.
-   * Can be a string (the id of the axis) or an object `XAxisProps`
+   * Indicate which axis to display the bottom of the charts.
+   * Can be a string (the id of the axis) or an object `ChartsXAxisProps`.
    * @default xAxisIds[0] The id of the first provided axis
    */
   bottomAxis: PropTypes.oneOfType([
@@ -95,25 +146,30 @@ BarChart.propTypes = {
       label: PropTypes.string,
       labelFontSize: PropTypes.number,
       position: PropTypes.oneOf(['bottom', 'top']),
+      slotProps: PropTypes.object,
+      slots: PropTypes.object,
       stroke: PropTypes.string,
       tickFontSize: PropTypes.number,
+      tickMaxStep: PropTypes.number,
+      tickMinStep: PropTypes.number,
+      tickNumber: PropTypes.number,
       tickSize: PropTypes.number,
     }),
     PropTypes.string,
   ]),
   children: PropTypes.node,
   className: PropTypes.string,
-  colors: PropTypes.arrayOf(PropTypes.string),
+  /**
+   * Color palette used to colorize multiple series.
+   */
+  colors: PropTypes.oneOfType([PropTypes.arrayOf(PropTypes.string), PropTypes.func]),
+  dataset: PropTypes.arrayOf(PropTypes.object),
   desc: PropTypes.string,
   disableAxisListener: PropTypes.bool,
-  height: PropTypes.number.isRequired,
-  highlight: PropTypes.shape({
-    x: PropTypes.oneOf(['band', 'line', 'none']),
-    y: PropTypes.oneOf(['line', 'none']),
-  }),
+  height: PropTypes.number,
   /**
-   * Indicate which axis to display the the left of the charts.
-   * Can be a string (the id of the axis) or an object `YAxisProps`
+   * Indicate which axis to display the left of the charts.
+   * Can be a string (the id of the axis) or an object `ChartsYAxisProps`.
    * @default yAxisIds[0] The id of the first provided axis
    */
   leftAxis: PropTypes.oneOfType([
@@ -126,12 +182,35 @@ BarChart.propTypes = {
       label: PropTypes.string,
       labelFontSize: PropTypes.number,
       position: PropTypes.oneOf(['left', 'right']),
+      slotProps: PropTypes.object,
+      slots: PropTypes.object,
       stroke: PropTypes.string,
       tickFontSize: PropTypes.number,
+      tickMaxStep: PropTypes.number,
+      tickMinStep: PropTypes.number,
+      tickNumber: PropTypes.number,
       tickSize: PropTypes.number,
     }),
     PropTypes.string,
   ]),
+  legend: PropTypes.shape({
+    classes: PropTypes.object,
+    direction: PropTypes.oneOf(['column', 'row']),
+    hidden: PropTypes.bool,
+    itemWidth: PropTypes.number,
+    markSize: PropTypes.number,
+    offset: PropTypes.shape({
+      x: PropTypes.number,
+      y: PropTypes.number,
+    }),
+    position: PropTypes.shape({
+      horizontal: PropTypes.oneOf(['left', 'middle', 'right']).isRequired,
+      vertical: PropTypes.oneOf(['bottom', 'middle', 'top']).isRequired,
+    }),
+    slotProps: PropTypes.object,
+    slots: PropTypes.object,
+    spacing: PropTypes.number,
+  }),
   margin: PropTypes.shape({
     bottom: PropTypes.number,
     left: PropTypes.number,
@@ -139,8 +218,8 @@ BarChart.propTypes = {
     top: PropTypes.number,
   }),
   /**
-   * Indicate which axis to display the the right of the charts.
-   * Can be a string (the id of the axis) or an object `YAxisProps`
+   * Indicate which axis to display the right of the charts.
+   * Can be a string (the id of the axis) or an object `ChartsYAxisProps`.
    * @default null
    */
   rightAxis: PropTypes.oneOfType([
@@ -153,15 +232,26 @@ BarChart.propTypes = {
       label: PropTypes.string,
       labelFontSize: PropTypes.number,
       position: PropTypes.oneOf(['left', 'right']),
+      slotProps: PropTypes.object,
+      slots: PropTypes.object,
       stroke: PropTypes.string,
       tickFontSize: PropTypes.number,
+      tickMaxStep: PropTypes.number,
+      tickMinStep: PropTypes.number,
+      tickNumber: PropTypes.number,
       tickSize: PropTypes.number,
     }),
     PropTypes.string,
   ]),
   series: PropTypes.arrayOf(
     PropTypes.shape({
-      data: PropTypes.arrayOf(PropTypes.number).isRequired,
+      color: PropTypes.string,
+      data: PropTypes.arrayOf(PropTypes.number),
+      dataKey: PropTypes.string,
+      highlightScope: PropTypes.shape({
+        faded: PropTypes.oneOf(['global', 'none', 'series']),
+        highlighted: PropTypes.oneOf(['item', 'none', 'series']),
+      }),
       id: PropTypes.string,
       label: PropTypes.string,
       stack: PropTypes.string,
@@ -175,10 +265,21 @@ BarChart.propTypes = {
         'reverse',
       ]),
       type: PropTypes.oneOf(['bar']),
+      valueFormatter: PropTypes.func,
       xAxisKey: PropTypes.string,
       yAxisKey: PropTypes.string,
     }),
   ).isRequired,
+  /**
+   * The props used for each component slot.
+   * @default {}
+   */
+  slotProps: PropTypes.object,
+  /**
+   * Overridable component slots.
+   * @default {}
+   */
+  slots: PropTypes.object,
   sx: PropTypes.oneOfType([
     PropTypes.arrayOf(PropTypes.oneOfType([PropTypes.func, PropTypes.object, PropTypes.bool])),
     PropTypes.func,
@@ -187,12 +288,13 @@ BarChart.propTypes = {
   title: PropTypes.string,
   tooltip: PropTypes.shape({
     axisContent: PropTypes.elementType,
+    classes: PropTypes.object,
     itemContent: PropTypes.elementType,
     trigger: PropTypes.oneOf(['axis', 'item', 'none']),
   }),
   /**
-   * Indicate which axis to display the the top of the charts.
-   * Can be a string (the id of the axis) or an object `XAxisProps`
+   * Indicate which axis to display the top of the charts.
+   * Can be a string (the id of the axis) or an object `ChartsXAxisProps`.
    * @default null
    */
   topAxis: PropTypes.oneOfType([
@@ -205,8 +307,13 @@ BarChart.propTypes = {
       label: PropTypes.string,
       labelFontSize: PropTypes.number,
       position: PropTypes.oneOf(['bottom', 'top']),
+      slotProps: PropTypes.object,
+      slots: PropTypes.object,
       stroke: PropTypes.string,
       tickFontSize: PropTypes.number,
+      tickMaxStep: PropTypes.number,
+      tickMinStep: PropTypes.number,
+      tickNumber: PropTypes.number,
       tickSize: PropTypes.number,
     }),
     PropTypes.string,
@@ -217,28 +324,32 @@ BarChart.propTypes = {
     x: PropTypes.number,
     y: PropTypes.number,
   }),
-  width: PropTypes.number.isRequired,
+  width: PropTypes.number,
   xAxis: PropTypes.arrayOf(
     PropTypes.shape({
       axisId: PropTypes.string,
       classes: PropTypes.object,
       data: PropTypes.array,
+      dataKey: PropTypes.string,
       disableLine: PropTypes.bool,
       disableTicks: PropTypes.bool,
       fill: PropTypes.string,
+      hideTooltip: PropTypes.bool,
       id: PropTypes.string,
       label: PropTypes.string,
       labelFontSize: PropTypes.number,
-      max: PropTypes.number,
-      maxTicks: PropTypes.number,
-      min: PropTypes.number,
-      minTicks: PropTypes.number,
+      max: PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.number]),
+      min: PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.number]),
       position: PropTypes.oneOf(['bottom', 'left', 'right', 'top']),
-      scaleType: PropTypes.oneOf(['band', 'linear', 'log', 'pow', 'sqrt', 'time', 'utc']),
+      scaleType: PropTypes.oneOf(['band', 'linear', 'log', 'point', 'pow', 'sqrt', 'time', 'utc']),
+      slotProps: PropTypes.object,
+      slots: PropTypes.object,
       stroke: PropTypes.string,
       tickFontSize: PropTypes.number,
+      tickMaxStep: PropTypes.number,
+      tickMinStep: PropTypes.number,
+      tickNumber: PropTypes.number,
       tickSize: PropTypes.number,
-      tickSpacing: PropTypes.number,
       valueFormatter: PropTypes.func,
     }),
   ),
@@ -247,22 +358,26 @@ BarChart.propTypes = {
       axisId: PropTypes.string,
       classes: PropTypes.object,
       data: PropTypes.array,
+      dataKey: PropTypes.string,
       disableLine: PropTypes.bool,
       disableTicks: PropTypes.bool,
       fill: PropTypes.string,
+      hideTooltip: PropTypes.bool,
       id: PropTypes.string,
       label: PropTypes.string,
       labelFontSize: PropTypes.number,
-      max: PropTypes.number,
-      maxTicks: PropTypes.number,
-      min: PropTypes.number,
-      minTicks: PropTypes.number,
+      max: PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.number]),
+      min: PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.number]),
       position: PropTypes.oneOf(['bottom', 'left', 'right', 'top']),
-      scaleType: PropTypes.oneOf(['band', 'linear', 'log', 'pow', 'sqrt', 'time', 'utc']),
+      scaleType: PropTypes.oneOf(['band', 'linear', 'log', 'point', 'pow', 'sqrt', 'time', 'utc']),
+      slotProps: PropTypes.object,
+      slots: PropTypes.object,
       stroke: PropTypes.string,
       tickFontSize: PropTypes.number,
+      tickMaxStep: PropTypes.number,
+      tickMinStep: PropTypes.number,
+      tickNumber: PropTypes.number,
       tickSize: PropTypes.number,
-      tickSpacing: PropTypes.number,
       valueFormatter: PropTypes.func,
     }),
   ),

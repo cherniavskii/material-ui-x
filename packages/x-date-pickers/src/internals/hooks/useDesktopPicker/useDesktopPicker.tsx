@@ -36,12 +36,14 @@ export const useDesktopPicker = <
     sx,
     format,
     formatDensity,
+    timezone,
     label,
     inputRef,
     readOnly,
     disabled,
     autoFocus,
     localeText,
+    reduceAnimations,
   } = props;
 
   const utils = useUtils<TDate>();
@@ -110,6 +112,7 @@ export const useDesktopPicker = <
       sx,
       format,
       formatDensity,
+      timezone,
       label,
       autoFocus: autoFocus && !props.open,
       focused: open ? true : undefined,
@@ -183,6 +186,7 @@ export const useDesktopPicker = <
         slots={slots}
         slotProps={slotProps}
         shouldRestoreFocus={shouldRestoreFocus}
+        reduceAnimations={reduceAnimations}
       >
         <Layout {...layoutProps} {...slotProps?.layout} slots={slots} slotProps={slotProps}>
           {renderCurrentView()}
