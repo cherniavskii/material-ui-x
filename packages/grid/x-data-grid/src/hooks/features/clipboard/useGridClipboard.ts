@@ -104,10 +104,10 @@ export const useGridClipboard = (
 
       textToCopy = apiRef.current.unstable_applyPipeProcessors('clipboardCopy', textToCopy);
 
-      if (textToCopy) {
-        copyToClipboard(textToCopy);
-        apiRef.current.publishEvent('clipboardCopy', textToCopy);
-      }
+      // if (textToCopy) {
+      copyToClipboard(textToCopy);
+      apiRef.current.publishEvent('clipboardCopy', textToCopy);
+      // }
     },
     [apiRef, ignoreValueFormatter, clipboardCopyCellDelimiter],
   );

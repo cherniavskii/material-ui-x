@@ -352,12 +352,12 @@ export const useGridClipboardImport = (
       }
 
       const text = await getTextFromClipboard(rootEl);
-      if (!text) {
+      if (text == null) {
         return;
       }
 
       const pastedData = splitClipboardPastedText(text);
-      if (!pastedData) {
+      if (pastedData == null) {
         return;
       }
 
