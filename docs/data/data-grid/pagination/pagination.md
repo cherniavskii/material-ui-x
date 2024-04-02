@@ -109,15 +109,14 @@ Check out [Selection—Usage with server-side pagination](/x/react-data-grid/row
 Since the `rowCount` prop is used to compute the number of available pages, switching it to `undefined` during loading resets the page to zero.
 To avoid this problem, you can keep the previous value of `rowCount` while loading as follows:
 
-```jsx
-const [rowCountState, setRowCountState] = React.useState(rowCount);
-React.useEffect(() => {
-  setRowCountState((prevRowCountState) =>
-    rowCount !== undefined ? rowCount : prevRowCountState,
-  );
-}, [rowCount, setRowCountState]);
+```tsx
+const rowCountRef = React.useRef(0);
+if (pageInfo?.totalRowCount !== undefined) {
+  rowCountRef.current = pageInfo?.totalRowCount;
+}
+const rowCount = rowCountRef.current;
 
-<DataGrid rowCount={rowCountState} />;
+<DataGrid rowCount={rowCount} />;
 ```
 
 {{"demo": "ServerPaginationGrid.js", "bg": "inline"}}

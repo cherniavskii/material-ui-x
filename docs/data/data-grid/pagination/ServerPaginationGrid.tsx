@@ -17,24 +17,19 @@ export default function ServerPaginationGrid() {
   const { isLoading, rows, pageInfo } = useQuery(paginationModel);
 
   // Some API clients return undefined while loading
-  // Following lines are here to prevent `rowCountState` from being undefined during the loading
-  const [rowCountState, setRowCountState] = React.useState(
-    pageInfo?.totalRowCount || 0,
-  );
-  React.useEffect(() => {
-    setRowCountState((prevRowCountState) =>
-      pageInfo?.totalRowCount !== undefined
-        ? pageInfo?.totalRowCount
-        : prevRowCountState,
-    );
-  }, [pageInfo?.totalRowCount, setRowCountState]);
+  // Following lines are here to prevent `rowCount` from being undefined during the loading
+  const rowCountRef = React.useRef(0);
+  if (pageInfo?.totalRowCount !== undefined) {
+    rowCountRef.current = pageInfo?.totalRowCount;
+  }
+  const rowCount = rowCountRef.current;
 
   return (
     <div style={{ height: 400, width: '100%' }}>
       <DataGrid
         rows={rows}
         {...data}
-        rowCount={rowCountState}
+        rowCount={rowCount}
         loading={isLoading}
         pageSizeOptions={[5]}
         paginationModel={paginationModel}
