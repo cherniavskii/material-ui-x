@@ -10,7 +10,6 @@ import {
   GridRowModes,
   DataGrid,
   GridToolbarContainer,
-  GridActionsCellItem,
   GridRowEditStopReasons,
   gridEditRowsStateSelector,
   useGridSelector,
@@ -110,7 +109,7 @@ function ActionsCell(props) {
     <GridActionsCell {...props}>
       {isInEditMode
         ? [
-            <GridActionsCellItem
+            <GridActionsCell.Item
               icon={<SaveIcon />}
               label="Save"
               sx={{
@@ -118,7 +117,7 @@ function ActionsCell(props) {
               }}
               onClick={() => handleSaveClick(props.id)}
             />,
-            <GridActionsCellItem
+            <GridActionsCell.Item
               icon={<CancelIcon />}
               label="Cancel"
               className="textPrimary"
@@ -127,14 +126,14 @@ function ActionsCell(props) {
             />,
           ]
         : [
-            <GridActionsCellItem
+            <GridActionsCell.Item
               icon={<EditIcon />}
               label="Edit"
               className="textPrimary"
               onClick={() => handleEditClick(props.id)}
               color="inherit"
             />,
-            <GridActionsCellItem
+            <GridActionsCell.Item
               icon={<DeleteIcon />}
               label="Delete"
               onClick={() => handleDeleteClick(props.id)}
